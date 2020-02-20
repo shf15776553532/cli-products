@@ -1,0 +1,58 @@
+{
+    "ONAP": {
+        "uid": "OVP123456",
+        "random": "123",
+        "ns_id": null,
+        "ns_version": null,
+        "ns_vf_resource_id": null,
+        "customer_id": null,
+        "customer_version": null,
+        "service_type_id": null,
+        "service_type_version": null,
+        "subscription_version": null,
+        "location_id": null,
+        "location_version": null,
+        "cloud_version": null,
+        "cloud_id": null,
+        "esr_vnfm_id": null,
+        "esr_vnfm_version": null,
+        "tenant_id": "8e6e4267c13240fc81d75bf18f8b59c0",
+        "tenant_version": null,
+        "vnfm-driver": "gvnfmdriver",
+        "ns_instance_id": null
+    },
+    "subscription": {
+           "customer-name": "ovp",
+           "service-type": "tosca_vnf_validation"
+    },
+    "vnfs": {
+        "stcv01": {
+            "vnf_uuid": "need to update according to sdc"
+        },
+        "stcv02": {
+            "vnf_uuid": "need to update according to sdc"
+        },
+        "openwrt": {
+            "vnf_uuid": "need to update according to sdc"
+        }
+    },
+    "ns": {
+        "ns_uuid": "need to update according to sdc"
+    },
+    "cloud": {
+        "identity-url": "http://192.168.235.2:5000/v3",
+        "username": "admin",
+        "password": "Onap@10086",
+        "region": "RegionOne",
+        "version": "titanium_cloud",
+        "tenant": "admin"
+    },
+    "vnfm":{
+        "gvnfmdriver":{
+            "version": "v1.0",
+            "url": "http://192.168.235.41:30280",
+            "username": "admin",
+            "password": "admin"
+        }
+    }
+}

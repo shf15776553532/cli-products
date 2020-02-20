@@ -9,11 +9,11 @@
 }, {
   "product" : "onap-dublin",
   "name" : "aai:host-url",
-  "value" : "https://159.138.8.8:30233"
+  "value" : "http://192.168.235.41:30280"
 }, {
   "product" : "onap-dublin",
   "name" : "sdc.catalog:host-url",
-  "value" : "http://159.138.8.8:30205"
+  "value" : "http://192.168.235.31:30205"
 }, {
   "product" : "onap-dublin",
   "name" : "sdc.catalog:service-model-add-artifact:host-username",
@@ -25,7 +25,7 @@
 }, {
   "product" : "onap-dublin",
   "name" : "multicloud:host-url",
-  "value" : "https://159.138.8.8:30233"
+  "value" : "http://192.168.235.41:30280"
 }, {
   "product" : "onap-dublin",
   "name" : "sdc.onboarding:host-password",
@@ -33,7 +33,7 @@
 }, {
   "product" : "onap-dublin",
   "name" : "sdc.onboarding:host-url",
-  "value" : "http://159.138.8.8:30280"
+  "value" : "http://192.168.235.31:32258"
 }, {
   "product" : "onap-dublin",
   "name" : "sdc.catalog:service-model-test-start:host-username",
@@ -57,7 +57,7 @@
 }, {
   "product" : "onap-dublin",
   "name" : "vfc:host-url",
-  "value" : "https://159.138.8.8:30233"
+  "value" : "http://192.168.235.41:30280"
 }, {
   "product" : "onap-dublin",
   "name" : "sdc.catalog:host-password",

@@ -126,6 +126,7 @@ class OCOMP:
             print (msg)
             raise OcompException(9999, msg)
 
+
 class ONAP:
     def __init__(self,
                  product,

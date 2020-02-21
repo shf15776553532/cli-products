@@ -247,7 +247,7 @@ class ONAP:
                     break
 
         if not self.customer_id and not self.customer_version:
-            customer_id = '{}-{}'.format(self.conf['subscription']['customer-name'], self.ocomp.conf['ONAP']['random'])
+            customer_id = '{}-{}'.format(self.conf['subscription']['customer-name'], self.conf['ONAP']['random'])
             self.ocomp.run(command='customer-create',
                                 params={'customer-name': customer_id,
                                         'subscriber-name': customer_id})

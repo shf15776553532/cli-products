@@ -45,7 +45,7 @@ logger.addHandler(hdlr=handler)
 logger.setLevel(logging.DEBUG)
 logger.propagate=True
 
-labserver_ip = "192.168.235.98"
+#labserver_ip = "192.168.235.98"
 ################################################
 
 if platform.system() == 'Windows':

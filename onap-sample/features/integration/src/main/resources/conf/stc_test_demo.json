@@ -1,6 +1,5 @@
 {
     "ONAP": {
-        "uid": "OVP123456",
         "random": "123",
         "ns_id": null,
         "ns_version": null,
@@ -19,7 +18,8 @@
         "tenant_id": "8e6e4267c13240fc81d75bf18f8b59c0",
         "tenant_version": null,
         "vnfm-driver": "gvnfmdriver",
-        "ns_instance_id": null
+        "ns_instance_id": null,
+        "labserver_ip":"192.168.235.98"
     },
     "subscription": {
            "customer-name": "ovp",

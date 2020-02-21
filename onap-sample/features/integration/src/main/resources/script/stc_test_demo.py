@@ -324,7 +324,7 @@ class ONAP:
                 break
 
 #         self.ocomp.run(command='multicloud-register-cloud',
-#                                 params={'cloud-region': self.conf['cloud']['region'],
+#                                 params={'clouvnfm-driverd-region': self.conf['cloud']['region'],
 #                                         'cloud-owner': self.cloud_id})
 
     def create_vnf(self):

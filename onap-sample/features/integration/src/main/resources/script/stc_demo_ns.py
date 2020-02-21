@@ -85,9 +85,9 @@ class STCDemoNS(object):
         vnfd_id_list = []
 
         # get vnfd id list according to ns_pkg_id
-        vnf_pkg_id_list = self.onap_api.get_vnf_pkg_id_list(ns_pkg_id)     _____OK
+        vnf_pkg_id_list = self.onap_api.get_vnf_pkg_id_list(ns_pkg_id)
         for pkg_id in vnf_pkg_id_list:
-            vnfd_id = self.onap_api.get_vnfd_id(pkg_id)     _____OK
+            vnfd_id = self.onap_api.get_vnfd_id(pkg_id)
         for pkg_id in vnf_pkg_id_list:
             vnfd_id_list.append(vnfd_id)
 

@@ -278,7 +278,7 @@ class ONAP(object):
         return server_ids
 
 # terminate and delete method
-   def terminate_ns(self, ns_instance_id):
+    def terminate_ns(self, ns_instance_id):
         ns_url = self.base_url + "/api/nslcm/v1/ns/%s" % ns_instance_id
         d = {
             "gracefulTerminationTimeout": 600,

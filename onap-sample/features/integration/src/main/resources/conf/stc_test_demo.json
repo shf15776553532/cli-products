@@ -1,5 +1,6 @@
 {
     "ONAP": {
+        "uid": "VTP123",
         "random": "123",
         "ns_id": null,
         "ns_version": null,

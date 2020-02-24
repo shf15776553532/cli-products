@@ -117,14 +117,14 @@ results:
     - name: Stcv1_result
       description: stcv1 tx rx frame and bit count
       scope: short
-      type: dictionary
+      type: json
     - name: Stcv2_result
       description: stcv2 tx rx frame and bit count
       scope: short
-      type: dictionary
+      type: json
 cmd:
   command:
-    -  python $s{env:OPEN_CLI_HOME}/script/vnf-tosca-lcm.py --vendor-name ${vnf-vendor-name} --vnf-name ${vnf-name} --result-json $s{tmp:result.json} --conf ${config-json} --vnfm-driver ${vnfm-driver}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --vendor-name ${vnf-vendor-name} --vnf-name ${vnf-name} --result-json $s{tmp:result.json} --conf ${config-json} --vnfm-driver ${vnfm-driver}
   success_codes:
     - 0
   working_directory: .

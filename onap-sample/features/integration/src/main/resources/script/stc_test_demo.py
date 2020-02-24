@@ -198,7 +198,7 @@ class ONAP:
                                             'complex-name': self.location_id,
                                             'identity-url': self.conf['cloud']['identity-url'],
                                             'cloud-owner': cloud_id,
-                                            'cloud-type': 'OpenStack',
+                                            'cloud-type': 'openstack',
                                             'owner-type': 'ocomp',
                                             'cloud-region-version': self.conf['cloud']['version'],
                                             'cloud-zone': 'az1',

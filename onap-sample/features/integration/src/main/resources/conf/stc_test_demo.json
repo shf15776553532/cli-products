@@ -16,7 +16,6 @@
         "cloud_id": null,
         "esr_vnfm_id": null,
         "esr_vnfm_version": null,
-        "tenant_id": "8e6e4267c13240fc81d75bf18f8b59c0",
         "tenant_version": null,
         "vnfm-driver": "gvnfmdriver",
         "ns_instance_id": null,

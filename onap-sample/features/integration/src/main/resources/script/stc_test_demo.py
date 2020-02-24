@@ -271,22 +271,22 @@ class ONAP:
         #     self.tenant_id = tenant_id
         #     subscribe = True
         #
-        #     output = self.ocomp.run(command='tenant-list', params={
-        #         'cloud': self.cloud_id,
-        #         'region': self.conf['cloud']['region']
-        #         })
-        #
-        #     for tenant in output:
-        #         if tenant['tenant-id'] == self.tenant_id:
-        #             self.tenant_version = tenant['resource-version']
-        #             break
+        output = self.ocomp.run(command='tenant-list', params={
+            'cloud': self.cloud_id,
+            'region': self.conf['cloud']['region']
+        })
+
+        for tenant in output:
+            if tenant['tenant-name'] == self.conf['cloud']['tenant']:
+                self.tenant_id = tenant['tenant-id']
+                break
 
         if subscribe:
             self.ocomp.run(command='subscription-create',
                                     params={'customer-name': self.customer_id,
                                             'cloud-owner': self.cloud_id,
                                             'cloud-region': self.conf['cloud']['region'],
-                                            'cloud-tenant-id': self.conf['ONAP']['tenant_id'],
+                                            'cloud-tenant-id': self.tenant_id,
                                             'service-type': self.service_type_id,
                                             'tenant-name': self.conf['cloud']['tenant']})
 
@@ -398,24 +398,30 @@ class ONAP:
         #                               'resource-version': self.tenant_version})
         #     self.tenant_id = self.tenant_version = None
 
-        if self.cloud_id and self.location_id:
-            self.ocomp.run(command='complex-disassociate',
-                              params={'cloud-owner': self.cloud_id,
-                                      'cloud-region': self.conf['cloud']['region'],
-                                      'complex-name': self.location_id})
+        # if self.cloud_id and self.location_id:
+        #     self.ocomp.run(command='complex-disassociate',
+        #                       params={'cloud-owner': self.cloud_id,
+        #                               'cloud-region': self.conf['cloud']['region'],
+        #                               'complex-name': self.location_id})
 
-        if self.cloud_id and self.cloud_version:
-            output = self.ocomp.run(command='cloud-list')
+        # if self.cloud_id and self.cloud_version:
+        #     output = self.ocomp.run(command='cloud-list')
+        #
+        #     for c in output:
+        #         if c['cloud'] == self.cloud_id and c['region'] == self.conf['cloud']['region']:
+        #             self.cloud_version = c['resource-version']
+        #             break
+        #
+        #     self.ocomp.run(command='cloud-delete',
+        #                       params={'cloud-name': self.cloud_id,
+        #                               'region-name': self.conf['cloud']['region'],
+        #                               'resource-version': self.cloud_version})
+        #     self.cloud_id = self.cloud_version = None
 
-            for c in output:
-                if c['cloud'] == self.cloud_id and c['region'] == self.conf['cloud']['region']:
-                    self.cloud_version = c['resource-version']
-                    break
-
+        if self.cloud_id:
             self.ocomp.run(command='cloud-delete',
                               params={'cloud-name': self.cloud_id,
-                                      'region-name': self.conf['cloud']['region'],
-                                      'resource-version': self.cloud_version})
+                                      'region-name': self.conf['cloud']['region']})
             self.cloud_id = self.cloud_version = None
 
         if self.location_id and self.location_version:

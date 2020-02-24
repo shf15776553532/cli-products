@@ -523,22 +523,22 @@ if __name__ == '__main__':
 #            conf['vnf']['vnf-csar'] = vnf_csar
 #        if ns_csar:
 #            conf['vnf']['ns-csar'] = vnf_csar
-        if vnf_name:
-            conf['vnf']['name'] = vnf_name
-        conf['vnf']['name'] = '{}{}'.format(conf['vnf']['name'], conf['ONAP']['uid'])
-        if vendor_name:
-            conf['vnf']['vendor-name'] = vendor_name
-        conf['vnf']['vendor-name'] = '{}-{}'.format(conf['vnf']['vendor-name'], conf['ONAP']['uid'])
+#        if vnf_name:
+#            conf['vnf']['name'] = vnf_name
+#        conf['vnf']['name'] = '{}{}'.format(conf['vnf']['name'], conf['ONAP']['uid'])
+#        if vendor_name:
+#            conf['vnf']['vendor-name'] = vendor_name
+#        conf['vnf']['vendor-name'] = '{}-{}'.format(conf['vnf']['vendor-name'], conf['ONAP']['uid'])
 
-    #if args.result:
-    #    result_file = args.result
+    if args.result:
+        result_file = args.result
     #    with open(result_file) as r_file:
     #        result_json = json.load(r_file)
     #        for r in result_json:
     #            if r in conf['ONAP']:
     #                conf['ONAP'][r] = result_json[r]
     #else:
-    #    result_file = None
+        result_file = None
 
     print (OCOMP.version())
 

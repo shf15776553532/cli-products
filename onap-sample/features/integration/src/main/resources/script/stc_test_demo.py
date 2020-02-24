@@ -419,7 +419,7 @@ class ONAP:
         #     self.cloud_id = self.cloud_version = None
 
         if self.cloud_id:
-            self.ocomp.run(command='cloud-delete',
+            self.ocomp.run(command='multicloud-cloud-delete',
                               params={'cloud-name': self.cloud_id,
                                       'region-name': self.conf['cloud']['region']})
             self.cloud_id = self.cloud_version = None

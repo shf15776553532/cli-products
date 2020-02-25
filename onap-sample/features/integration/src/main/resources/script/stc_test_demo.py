@@ -30,6 +30,7 @@ import platform
 import datetime
 import string
 import random
+import time
 
 from argparse import RawTextHelpFormatter
 
@@ -338,10 +339,10 @@ class ONAP:
     def create_vnf(self):
         vnfs = self.conf["vnfs"]
         logger.debug('----------vfc-catalog-onboard-vnf----------')
-        for vnf_key, vnf_values in vnfs.items():{
+        for vnf_key, vnf_values in vnfs.items():
             self.ocomp.run(command='vfc-catalog-onboard-vnf',
                            params={'vnf-csar-uuid': vnf_values.get("vnf_uuid")})
-        }
+        time.sleep(60)
         logger.debug('----------vfc-catalog-onboard-ns----------')
         self.ocomp.run(command='vfc-catalog-onboard-ns',
                                 params={'ns-csar-uuid': self.conf['ns']['ns_uuid']})
@@ -439,6 +440,7 @@ class ONAP:
                                       'cloud-region': self.conf['cloud']['region']})
             self.cloud_id = self.cloud_version = None
 
+        time.sleep(30)
         if self.location_id and self.location_version:
             logger.debug('----------complex-delete----------')
             self.ocomp.run(command='complex-delete',

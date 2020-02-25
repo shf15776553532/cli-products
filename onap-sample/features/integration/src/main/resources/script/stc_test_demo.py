@@ -164,6 +164,7 @@ class ONAP:
         associate = False
         if not self.location_id and not self.location_version:
             location_id = 'ocomp-region-{}'.format(self.conf['ONAP']['uid'])
+            logger.debug('----------complex-create----------')
             self.ocomp.run(command='complex-create',
                                     params={'physical-location-id': location_id,
                                             'data-center-code': 'ocomp',
@@ -193,6 +194,7 @@ class ONAP:
 
         if not self.cloud_id and not self.cloud_version:
             cloud_id = 'OCOMP-{}'.format(self.conf['ONAP']['uid'])
+            logger.debug('----------cloud-create----------')
             self.ocomp.run(command='cloud-create',
                                     params={'region-name': self.conf['cloud']['region'],
                                             'complex-name': self.location_id,
@@ -222,11 +224,13 @@ class ONAP:
                     break
 
         if associate:
+            logger.debug('----------complex-associate----------')
             self.ocomp.run(command='complex-associate',
                                     params={'complex-name': self.location_id,
                                             'cloud-region': self.conf['cloud']['region'],
                                             'cloud-owner': self.cloud_id})
-
+        
+        logger.debug('----------multicloud-register-cloud----------')
         self.ocomp.run(command='multicloud-register-cloud',
                        params={'cloud-region': self.conf['cloud']['region'], 'cloud-owner': self.cloud_id})
 
@@ -248,6 +252,7 @@ class ONAP:
 
         if not self.customer_id and not self.customer_version:
             customer_id = '{}-{}'.format(self.conf['subscription']['customer-name'], self.conf['ONAP']['random'])
+            logger.debug('----------customer-create----------')
             self.ocomp.run(command='customer-create',
                                 params={'customer-name': customer_id,
                                         'subscriber-name': customer_id})
@@ -271,6 +276,7 @@ class ONAP:
         #     self.tenant_id = tenant_id
         #     subscribe = True
         #
+        logger.debug('----------tenant-list----------')
         output = self.ocomp.run(command='tenant-list', params={
             'cloud': self.cloud_id,
             'region': self.conf['cloud']['region']
@@ -282,6 +288,7 @@ class ONAP:
                 break
 
         if subscribe:
+            logger.debug('----------subscription-create----------')
             self.ocomp.run(command='subscription-create',
                                     params={'customer-name': self.customer_id,
                                             'cloud-owner': self.cloud_id,
@@ -304,6 +311,7 @@ class ONAP:
             vnfmdriver = self.conf['ONAP']['vnfm-driver']
 
             esr_vnfm_id = str(uuid.uuid4())
+            logger.debug('----------vnfm-create----------')
             self.ocomp.run(command='vnfm-create',
                                     params={'vim-id': self.cloud_id,
                                             'vnfm-id': esr_vnfm_id,
@@ -329,10 +337,12 @@ class ONAP:
 
     def create_vnf(self):
         vnfs = self.config_params["vnfs"]
+        logger.debug()
         for vnf_key, vnf_values in vnfs.items():{
             self.ocomp.run(command='vfc-catalog-onboard-vnf',
                            params={'vnf-csar-uuid': vnf_values.get("vnf_uuid")})
         }
+        logger.debug()
         self.ocomp.run(command='vfc-catalog-onboard-ns',
                                 params={'ns-csar-uuid': self.self.conf['ns']['ns_uuid']})
 
@@ -358,13 +368,16 @@ class ONAP:
 
     def cleanup(self):
         if self.ns_instance_id:
+            logger.debug('----------vfc-nslcm-terminate----------')
             self.ocomp.run(command='vfc-nslcm-terminate',
                               params={'ns-instance-id': self.ns_instance_id})
+            logger.debug('----------vfc-nslcm-delete----------')
             self.ocomp.run(command='vfc-nslcm-delete',
                               params={'ns-instance-id': self.ns_instance_id})
             self.ns_instance_id = None
 
         if self.subscription_version and self.customer_id and self.service_type_id:
+            logger.debug('----------subscription-delete----------')
             self.ocomp.run(command='subscription-delete',
                               params={'customer-name': self.customer_id,
                                       'service-type': self.service_type_id,
@@ -372,6 +385,7 @@ class ONAP:
             self.subscription_version = None
 
         if self.customer_id and self.customer_version:
+            logger.debug('----------customer-delete----------')
             self.ocomp.run(command='customer-delete',
                               params={'customer-id': self.customer_id,
                                       'resource-version': self.customer_version})
@@ -384,7 +398,7 @@ class ONAP:
                 if st['service-type-id'] == self.service_type_id:
                     self.service_type_version = st['resource-version']
                     break
-
+            logger.debug('----------service-type-delete----------')
             self.ocomp.run(command='service-type-delete',
                               params={'service-type-id': self.service_type_id,
                                       'resource-version': self.service_type_version})
@@ -419,18 +433,21 @@ class ONAP:
         #     self.cloud_id = self.cloud_version = None
 
         if self.cloud_id:
+            logger.debug('----------multicloud-cloud-delete----------')
             self.ocomp.run(command='multicloud-cloud-delete',
                               params={'cloud-owner': self.cloud_id,
                                       'cloud-region': self.conf['cloud']['region']})
             self.cloud_id = self.cloud_version = None
 
         if self.location_id and self.location_version:
+            logger.debug('----------complex-delete----------')
             self.ocomp.run(command='complex-delete',
                               params={'complex-name': self.location_id,
                                       'resource-version': self.location_version})
             self.location_id = self.location_version = None
 
         if self.esr_vnfm_id and self.esr_vnfm_version:
+            logger.debug('----------vnfm-delete----------')
             self.ocomp.run(command='vnfm-delete',
                               params={'vnfm-id': self.esr_vnfm_id,
                                       'resource-version': self.esr_vnfm_version})

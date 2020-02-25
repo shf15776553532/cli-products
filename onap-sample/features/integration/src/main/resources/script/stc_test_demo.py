@@ -336,15 +336,15 @@ class ONAP:
 #                                         'cloud-owner': self.cloud_id})
 
     def create_vnf(self):
-        vnfs = self.config["vnfs"]
-        logger.debug('vfc-catalog-onboard-vnf')
+        vnfs = self.conf["vnfs"]
+        logger.debug('----------vfc-catalog-onboard-vnf----------')
         for vnf_key, vnf_values in vnfs.items():{
             self.ocomp.run(command='vfc-catalog-onboard-vnf',
                            params={'vnf-csar-uuid': vnf_values.get("vnf_uuid")})
         }
-        logger.debug('vfc-catalog-onboard-ns')
+        logger.debug('----------vfc-catalog-onboard-ns----------')
         self.ocomp.run(command='vfc-catalog-onboard-ns',
-                                params={'ns-csar-uuid': self.self.conf['ns']['ns_uuid']})
+                                params={'ns-csar-uuid': self.conf['ns']['ns_uuid']})
 
         '''
         output = self.ocomp.run(command='vfc-nslcm-create',

@@ -420,8 +420,8 @@ class ONAP:
 
         if self.cloud_id:
             self.ocomp.run(command='multicloud-cloud-delete',
-                              params={'cloud-name': self.cloud_id,
-                                      'region-name': self.conf['cloud']['region']})
+                              params={'cloud-owner': self.cloud_id,
+                                      'cloud-region': self.conf['cloud']['region']})
             self.cloud_id = self.cloud_version = None
 
         if self.location_id and self.location_version:
@@ -573,7 +573,7 @@ if __name__ == '__main__':
         #onap_result = json.dumps(onap, default=lambda x: x.__dict__)
         #print(onap_result)
 
-        if result_file :
+        if result_file:
             #Remove conf and ocomp from the onap object
             #for attr in ['ocomp', 'tag', 'conf']:
             #    delattr(onap, attr)

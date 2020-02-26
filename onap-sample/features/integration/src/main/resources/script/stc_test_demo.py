@@ -378,10 +378,10 @@ class ONAP:
         if self.ns_instance_id:
             logger.debug('----------vfc-nslcm-terminate----------')
             self.ocomp.run(command='vfc-nslcm-terminate',
-                            params={'ns-instance-id': stc_demo_ns_obj.ns_instance_id})
+                            params={'ns-instance-id': self.ns_instance_id})
             logger.debug('----------vfc-nslcm-delete----------')
             self.ocomp.run(command='vfc-nslcm-delete',
-                            params={'ns-instance-id': stc_demo_ns_obj.ns_instance_id})
+                            params={'ns-instance-id': self.ns_instance_id})
             self.ns_instance_id = None
 
         if self.subscription_version and self.customer_id and self.service_type_id:

@@ -367,14 +367,21 @@ class ONAP:
         self.vnf_status = 'active'
         self.ns_instance_status = 'active'
 
+    def set_ns_instance_id(self,stc_demo_ns_obj=None): #ns_instance_id now returned in stc_demo_ns code, get the value in this method
+        if stc_demo_ns_obj:
+            self.ns_instance_id = stc_demo_ns_obj.ns_instance_id
+        else:
+            self.ns_instance_id = None
+
+
     def cleanup(self):
         if self.ns_instance_id:
             logger.debug('----------vfc-nslcm-terminate----------')
             self.ocomp.run(command='vfc-nslcm-terminate',
-                              params={'ns-instance-id': self.ns_instance_id})
+                            params={'ns-instance-id': stc_demo_ns_obj.ns_instance_id})
             logger.debug('----------vfc-nslcm-delete----------')
             self.ocomp.run(command='vfc-nslcm-delete',
-                              params={'ns-instance-id': self.ns_instance_id})
+                            params={'ns-instance-id': stc_demo_ns_obj.ns_instance_id})
             self.ns_instance_id = None
 
         if self.subscription_version and self.customer_id and self.service_type_id:
@@ -585,6 +592,7 @@ if __name__ == '__main__':
         print(e)
         
     finally:
+        onap.set_ns_instance_id(ns)
         onap.cleanup()
         print ('Done')
 

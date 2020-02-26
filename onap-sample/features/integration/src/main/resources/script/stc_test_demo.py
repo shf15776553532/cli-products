@@ -318,7 +318,7 @@ class ONAP:
                                             'vnfm-id': esr_vnfm_id,
                                             'name': 'OCOMP {}'.format(vnfmdriver),
                                             'type': vnfmdriver,
-                                            'vendor': self.conf['vnf']['vendor-name'],
+                                            'vendor': 'onap-dublin',
                                             'vnfm-version': self.conf['vnfm'][vnfmdriver]['version'],
                                             'url': self.conf['vnfm'][vnfmdriver]['url'],
                                             'username': self.conf['vnfm'][vnfmdriver]['username'],

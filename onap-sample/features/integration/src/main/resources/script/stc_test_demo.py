@@ -314,7 +314,7 @@ class ONAP:
             esr_vnfm_id = str(uuid.uuid4())
             logger.debug('----------vnfm-create----------')
             self.ocomp.run(command='vnfm-create',
-                                    params={'vim-id': self.cloud_id,
+                                    params={'vim-id': self.cloud_id + "_" + self.conf['cloud']['region'],
                                             'vnfm-id': esr_vnfm_id,
                                             'name': 'OCOMP {}'.format(vnfmdriver),
                                             'type': vnfmdriver,
@@ -562,14 +562,14 @@ if __name__ == '__main__':
     print (OCOMP.version())
 
     onap = ONAP(product, profile, conf, request_id)
-    onap_api = ONAP_api(base_url=conf['vnfm']['gvnfmdriver']['url'])
+    onap_api = ONAP_api(conf['vnfm']['gvnfmdriver']['url'], conf)
 
     try:
         onap.setup_cloud_and_subscription()
         onap.create_vnf() # onboard vnf and onboard ns
         ns = STCDemoNS(conf, onap_api) 
         ns.set_openstack_client()
-        ns.instantiate(conf['ns']['ns_uuid'])
+        ns.instantiate(conf['ns']['ns_uuid'], onap.service_type_id, onap.customer_id, onap.customer_id)
         ns.wait_vnf_ready()
         testresult = None
         test = SimpleTrafficTest(labserver_ip=conf['ONAP']['labserver_ip'],

@@ -16,8 +16,9 @@ class ONAPError(Exception):
 
 class ONAP(object):
 
-    def __init__(self, base_url):
+    def __init__(self, base_url, conf):
         self.base_url = base_url
+        self.conf = conf
         self.aai_header = {
             "Accept": "application/json",
             "Content-Type": "application/json",
@@ -190,14 +191,14 @@ class ONAP(object):
 
         return ns_instance_id
 
-    def instantiate_ns(self, ns_instance_id, vnfd_id_list):
+    def instantiate_ns(self, ns_instance_id, vnfd_id_list, cloud_id):
         locationConstraints = [
             {
                 "vnfProfileId": x,
                 "locationConstraints": {
-                    "vimId": "STC_RegionOne"     # self.config_params["location"]
+                    "vimId": cloud_id + "_" + self.conf['cloud']['region']     # self.config_params["location"]
                 }
-            } for x in vnfd_id_list ]
+            } for x in vnfd_id_list]
         data = {
             "additionalParamForNs": {
                 "sdnControllerId": 2    #self.config_params["sdc-controller-id"],

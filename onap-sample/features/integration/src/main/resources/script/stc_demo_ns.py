@@ -81,23 +81,23 @@ class STCDemoNS(object):
         # server = client.get_server(name_or_id="ubuntu1604")
         self.openstack_client = client
 
-    def instantiate(self, ns_pkg_id): 
+    def instantiate(self, ns_pkg_id, service_type_id, customer_id, cloud_id):
         vnfd_id_list = []
 
         # get vnfd id list according to ns_pkg_id
         vnf_pkg_id_list = self.onap_api.get_vnf_pkg_id_list(ns_pkg_id)
         for pkg_id in vnf_pkg_id_list:
             vnfd_id = self.onap_api.get_vnfd_id(pkg_id)
-        for pkg_id in vnf_pkg_id_list:
-            vnfd_id_list.append(vnfd_id)
+            if vnfd_id is not None:
+                vnfd_id_list.append(vnfd_id)
 
         ns_instance_id = self.onap_api.create_ns(ns_name="qdai_demostcns",
-                            ns_desc="STC test demo ns",
-                            ns_pkg_id=ns_pkg_id,
-                            service_type = self.conf['subscription']['service-type'],      
-                            customer_name= self.conf['subscription']['customer-name']) 
+                                                 ns_desc="STC test demo ns",
+                                                 ns_pkg_id=ns_pkg_id,
+                                                 service_type=service_type_id,
+                                                 customer_name=customer_id)
         try:
-            ns_instance_jod_id = self.onap_api.instantiate_ns(ns_instance_id, vnfd_id_list=vnfd_id_list)
+            ns_instance_jod_id = self.onap_api.instantiate_ns(ns_instance_id, vnfd_id_list, cloud_id)
             self.onap_api.waitProcessFinished(ns_instance_id, ns_instance_jod_id, "instantiate")
         except Exception as e:
             self.onap_api.delete_ns(ns_instance_id)

@@ -384,6 +384,14 @@ class ONAP:
                             params={'ns-instance-id': self.ns_instance_id})
             self.ns_instance_id = None
 
+        self.ocomp.run(command='vfc-catalog-delete-ns',
+                       params={'ns-csar-uuid': self.conf['ns']['ns_uuid']})
+
+        vnfs = self.conf["vnfs"]
+        for vnf_key, vnf_values in vnfs.items():
+            self.ocomp.run(command='vfc-catalog-delete-vnf',
+                           params={'vnf-csar-uuid': vnf_values.get("vnf_uuid")})
+
         if self.subscription_version and self.customer_id and self.service_type_id:
             logger.debug('----------subscription-delete----------')
             self.ocomp.run(command='subscription-delete',

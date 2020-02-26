@@ -569,7 +569,7 @@ if __name__ == '__main__':
         onap.create_vnf() # onboard vnf and onboard ns
         ns = STCDemoNS(conf, onap_api) 
         ns.set_openstack_client()
-        ns.instantiate(conf['ns']['ns_uuid'], onap.service_type_id, onap.customer_id, onap.customer_id)
+        ns.instantiate(conf['ns']['ns_uuid'], onap.service_type_id, onap.customer_id, onap.cloud_id)
         ns.wait_vnf_ready()
         testresult = None
         test = SimpleTrafficTest(labserver_ip=conf['ONAP']['labserver_ip'],

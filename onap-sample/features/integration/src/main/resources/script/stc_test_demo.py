@@ -571,18 +571,18 @@ if __name__ == '__main__':
     #        for r in result_json:
     #            if r in conf['ONAP']:
     #                conf['ONAP'][r] = result_json[r]
-    #else:
+    else:
         result_file = None
 
     print (OCOMP.version())
 
     onap = ONAP(product, profile, conf, request_id)
     onap_api = ONAP_api(conf['vnfm']['gvnfmdriver']['url'], conf)
+    ns = STCDemoNS(conf, onap_api)
 
     try:
         onap.setup_cloud_and_subscription()
         onap.create_vnf() # onboard vnf and onboard ns
-        ns = STCDemoNS(conf, onap_api) 
         ns.set_openstack_client()
         ns.instantiate(conf['ns']['ns_uuid'], onap.service_type_id, onap.customer_id, onap.cloud_id)
         ns.wait_vnf_ready()

@@ -243,21 +243,35 @@ class SimpleTrafficTest(object):
 
     def run(self, port_rate=10, duration=10):
         try:
+            logger.debug('----------Connect to the 2 chassis----------')
             self.connect_chassis()
+            logger.debug('----------Connect to the 2 chassis done----------')
 
+            logger.debug('----------configure chassis port----------')
             self.configure_port(self.west_stcv)
             self.configure_port(self.east_stcv)
+            logger.debug('----------configure chassis port done----------')
 
+            logger.debug('----------create stream block----------')
             self.create_stream_block()
+            logger.debug('----------create stream block----------')
 
+            logger.debug('----------confiure traffic for 2 STCv ----------')
             self.configure_traffic_load(self.west_stcv, port_rate, duration)
             self.configure_traffic_load(self.east_stcv, port_rate, duration)
+            logger.debug('----------confiure traffic for 2 STCv done----------')
 
+            logger.debug('----------subscribe result----------')
             self.subscrible_result()
+            logger.debug('----------subscribe result done----------')
 
+            logger.debug('----------run traffic----------')
             self.run_traffic()
-
+            logger.debug('----------run traffic done----------')
+            
+            logger.debug('----------check result----------')
             self.check_result()
+            logger.debug('----------check result done----------')
 
         except Exception as e: 
             print(e)

@@ -1,0 +1,61 @@
+# Copyright (c) 2020, CMCC Technologies Co., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+open_cli_schema_version: 1.0
+name: onap-config
+description: |
+  Set Onap Common configurations
+
+info:
+  product: onap-dublin
+  service: vnf-validation
+  author: ONAP VTP Team
+
+parameters:
+  - name: profile-config-path
+    description: Configuration file path
+    type: string
+    short_option: x
+    long_option: profile-config-path
+    default_value: $s{env:OPEN_CLI_HOME}
+    is_optional: false
+  - name: vim
+    description: json string for vim
+    type: string
+    short_option: A
+    long_option: vim
+    is_optional: false
+  - name: vnfm
+    description: json string for vnfm
+    type: string
+    short_option: B
+    long_option: vnfm
+    is_optional: false
+results:
+  direction: portrait
+  attributes:
+    - name: file_name
+      description: test case result
+      scope: short
+      type: string
+cmd:
+  command:
+    -  python3 $s{env:OPEN_CLI_HOME}/script/onap-config.py --vim ${vim} --vnfm ${vnfm} --result-json $s{tmp:result.json}  --conf ${profile-config-path}
+  success_codes:
+    - 0
+  working_directory: .
+  output: $s{tmp:result.json}
+  result_map:
+    file_name: ${file_name}
+

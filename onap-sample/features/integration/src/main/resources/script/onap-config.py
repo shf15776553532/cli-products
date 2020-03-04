@@ -61,8 +61,6 @@ if __name__ == "__main__":
 
         conf = Config(args.config_file_path, data)
         conf.run()
-    # except Exception as ex:
-    #     print("Parse Onap Config error:{}".format(ex))
     finally:
         onap_result = json.dumps(conf, default=lambda x: x.__dict__)
         print(onap_result)

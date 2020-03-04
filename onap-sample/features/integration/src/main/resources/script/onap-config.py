@@ -41,7 +41,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="ONAP configuration using ONAP CLI and Open Command Platform (OCOMP)",
                                      formatter_class=RawTextHelpFormatter)
     parser.add_argument('--vim', action='store', dest='vim', help='Json string for vim')
-    parser.add_argument('--vnfm', action='store', dest='vnfm', help='Json string for vim')
+    parser.add_argument('--vnfm', action='store', dest='vnfm', help='Json string for vnfm')
     parser.add_argument('--conf', action='store', dest='config_file_path', help='Configuration file path')
     parser.add_argument('--result-json', action='store', dest='result', help='Result json file.')
     args = parser.parse_args()

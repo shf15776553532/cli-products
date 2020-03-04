@@ -1,0 +1,15 @@
+open_cli_sample_version: 1.0
+name: onap-config
+version: onap-dublin
+samples:
+  sample1:
+    name: onap-config
+    input: --vim "{\"vim\":{\"name\":\"hw\",\"version\":\"1.0\"}}" --vnfm "{\"vim\":{\"name\":\"hw01\",\"version\":\"11.0\"}}"
+    moco: onap-config-dublin-schema-moco.json
+    output: |
+      +------------+--------------------------------------------+
+      |property    |value                                       |
+      +------------+--------------------------------------------+
+      |file_name   |61520c48-5df4-11ea-8ff6-000c2916b92d.json   |
+      +------------+--------------------------------------------+
+

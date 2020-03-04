@@ -17,6 +17,9 @@ name: onap-config
 description: |
   Set Onap Common configurations
 
+  example：
+  oclip --product onap-dublin onap-config --vim "{\"vim\":{\"name\":\"cmcc\",\"version\":\"1.0\"}}" --vnfm "{\"vim\":{\"name\":\"cmcc\",\"version\":\"11.0\"}}"
+
 info:
   product: onap-dublin
   service: vnf-validation

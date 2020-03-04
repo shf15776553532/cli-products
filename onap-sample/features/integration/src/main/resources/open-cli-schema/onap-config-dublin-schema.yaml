@@ -32,7 +32,7 @@ parameters:
     short_option: x
     long_option: profile-config-path
     default_value: $s{env:OPEN_CLI_HOME}
-    is_optional: false
+    is_optional: true
   - name: vim
     description: json string for vim
     type: string

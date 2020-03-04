@@ -4,7 +4,7 @@ version: onap-dublin
 samples:
   sample1:
     name: onap-config
-    input: --vim "{\"vim\":{\"name\":\"hw\",\"version\":\"1.0\"}}" --vnfm "{\"vim\":{\"name\":\"hw01\",\"version\":\"11.0\"}}"
+    input: --vim "{\"vim\":{\"name\":\"cmcc\",\"version\":\"1.0\"}}" --vnfm "{\"vnfm\":{\"name\":\"cmcc\",\"version\":\"11.0\"}}"
     moco: onap-config-dublin-schema-moco.json
     output: |
       +------------+--------------------------------------------+

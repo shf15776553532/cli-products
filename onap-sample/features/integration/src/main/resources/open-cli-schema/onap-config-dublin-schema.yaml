@@ -57,5 +57,5 @@ cmd:
   working_directory: .
   output: $s{tmp:result.json}
   result_map:
-    file_name: ${file_name}
+    file_name: $o{$.file_name}
 

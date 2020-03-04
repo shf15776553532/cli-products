@@ -19,7 +19,7 @@ import uuid
 from argparse import RawTextHelpFormatter
 
 
-class Config:
+class Config(object):
     """
     This script uses the ONAP CLI for providing the common configurations.
     """

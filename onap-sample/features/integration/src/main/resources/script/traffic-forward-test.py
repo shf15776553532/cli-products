@@ -237,13 +237,16 @@ class SimpleTrafficTest(object):
     def check_result(self):
         self.result1 = self.collect_result(self.west_stcv)
         self.result2 = self.collect_result(self.east_stcv)
-        if self.result1["tx_frame_count"]==self.result2["rx_frame_count"] and self.result2["tx_frame_count"]==self.result1["rx_frame_count"]:
+        pkt_loss1 = (int(self.result1["tx_frame_count"]) - int(self.result2["rx_frame_count"])) / int(self.result1["tx_frame_count"]) 
+        pkt_loss2 = (int(self.result2["tx_frame_count"]) - int(self.result1["rx_frame_count"])) / int(self.result2["tx_frame_count"])
+        #if self.result1["tx_frame_count"]==self.result2["rx_frame_count"] and self.result2["tx_frame_count"]==self.result1["rx_frame_count"]:
+        if pkt_loss1 < 0.1 and pkt_loss2 < 0.1:
             self.testpass = 'PASS'
         else:
             self.testpass = 'FAIL'
         
 
-    def run(self, port_rate=10, duration=10):
+    def run(self, port_rate=1, duration=10):
         try:
             logger.debug('----------Connec to the 2 chassis----------')
             self.connect_chassis()
@@ -261,6 +264,15 @@ class SimpleTrafficTest(object):
             self.run_traffic()
             logger.debug('----------check result----------')
             self.check_result()
+            result_dict = {'Test_result': self.testpass,
+                           'Stcv1_tx_frame': self.result1["tx_frame_count"],
+                           'Stcv1_tx_bit': self.result1["tx_bit_count"],
+                           'Stcv1_rx_frame': self.result1["rx_frame_count"],
+                           'Stcv1_rx_bit': self.result1["rx_bit_count"],
+                           'Stcv2_tx_frame': self.result2["tx_frame_count"],
+                           'Stcv2_tx_bit': self.result2["tx_bit_count"],
+                           'Stcv2_rx_frame': self.result2["rx_frame_count"],
+                           'Stcv2_rx_bit': self.result2["rx_bit_count"]}
             self.end_session()
         except Exception as e: 
             print(e)
@@ -268,9 +280,10 @@ class SimpleTrafficTest(object):
 
         finally:
             #self.end_session()
-            result_dict = {'Test_result': self.testpass,
-                           'Stcv1_result': self.result1,
-                           'Stcv2_result': self.result2}
+            #result_dict = {'Test_result': self.testpass,
+            #               'Stcv1_result': self.result1,
+            #               'Stcv2_result': self.result2}
+            pass
             return result_dict
 
         

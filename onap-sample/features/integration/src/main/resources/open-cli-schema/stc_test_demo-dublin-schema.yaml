@@ -82,55 +82,75 @@ info:
   author: ONAP VTP Team
 
 parameters:
-  - name: config-json
+  - name: conf
     description: Configuration file path
     type: string
-    short_option: x
-    long_option: config-json
+    short_option: C
+    long_option: conf
     default_value: $s{env:OPEN_CLI_HOME}/conf/stc_test_demo.json
     is_optional: false
+  - name: product
+    description: product value
+    type: string
+    short_option: P
+    long_option: product
+    is_optional: true
+  - name: profile
+    description: profile value
+    type: string
+    short_option: p
+    long_option: profile
+    is_optional: true
+  - name: request-id
+    description: request-id value
+    type: string
+    short_option: r
+    long_option: request-id
+    is_optional: true
   - name: vnfm-driver
     description: VNFM driver to use. One of gvnfmdriver or hwvnfmdriver
     type: string
     short_option: c
     long_option: vnfm-driver
-    is_optional: false
+    is_optional: true
   - name: vnf-name
     description: VNF Name
     type: string
     short_option: A
     long_option: vnf-name
-    is_optional: false
-  - name: vnf-vendor-name
+    is_optional: true
+  - name: vendor-name
     description: VNF Vendor Name
     type: string
     short_option: B
-    long_option: vnf-vendor-name
+    long_option: vendor-name
+    is_optional: true
+  - name: result-json
+    description: VNF Vendor Name
+    type: string
+    short_option: j
+    long_option: result-json
     is_optional: false
+
+
+
+
 results:
   direction: portrait
   attributes:
     - name: Test_result
-      description: test case result
+      description: test result pass or fail
       scope: short
       type: string
-    - name: Stcv1_result
-      description: stcv1 tx rx frame and bit count
-      scope: short
-      type: json
-    - name: Stcv2_result
-      description: stcv2 tx rx frame and bit count
-      scope: short
-      type: json
+
+
 cmd:
   command:
-    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --vendor-name ${vnf-vendor-name} --vnf-name ${vnf-name} --result-json $s{tmp:result.json} --conf ${config-json} --vnfm-driver ${vnfm-driver}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --vendor-name ${vendor-name} --vnf-name ${vnf-name} --result-json $s{tmp:result.json} --conf ${conf} --vnfm-driver ${vnfm-driver}
   success_codes:
     - 0
   working_directory: .
   output: $s{tmp:result.json}
   result_map:
-    Test_result: ${Test_result}
-    Stcv1_result:  ${Stcv1_result}
-    Stcv2_result: ${Stcv2_result}
+    Test_result: $o{$.Test_result}
 

@@ -790,7 +790,7 @@ if __name__ == '__main__':
         print(e)
         
     finally:
-        puase = input('stop here before cleanup: ')
+        #puase = input('stop here before cleanup: ')
         onap.cleanup()
         print ('Done')
 

@@ -1,0 +1,103 @@
+# Copyright 2019 Huawei Technologies Co., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+open_cli_schema_version: 1.0
+name: traffic-forward-test
+description: |
+  ONAP TOSCA VNF validation using ONAP CLI and Open Command Platform (OCOMP)
+
+
+info:
+  product: onap-dublin
+  service: vfc
+  author: ONAP VTP Team kanagaraj.manickam@huawei.com
+
+parameters:
+  - name: format
+    type: string
+    description: Output formats, supported formats such as table, csv, json, yaml
+    short_option: f
+    long_option: format
+    default_value: text
+    is_default_param: true  
+  - name: labserver-ip
+    description: The IP address of spirent labserver
+    type: string
+    short_option: L
+    long_option: labserver-ip
+    is_optional: false
+  - name: stcv1-mgmt-ip
+    description: The MGMT IP address of stcv west
+    type: string
+    short_option: W
+    long_option: stcv1-mgmt-ip
+    is_optional: false
+  - name: stcv1-test-ip
+    description: The IP address of stcv west test port
+    type: string
+    short_option: w
+    long_option: stcv1-test-ip
+    is_optional: false
+  - name: stcv2-mgmt-ip
+    description: The MGMT IP address of stcv east
+    type: string
+    short_option: E
+    long_option: stcv2-mgmt-ip
+    is_optional: false
+  - name: stcv2-test-ip
+    description: The IP address of stcv east test port
+    type: string
+    short_option: e
+    long_option: stcv2-test-ip
+    is_optional: false
+  - name: dut-left-ip
+    description: The IP address of OpenWrt DUT left port
+    type: string
+    short_option: l
+    long_option: dut-left-ip
+    is_optional: false
+  - name: dut-right-ip
+    description: The IP address of OpenWrt DUT right port
+    type: string
+    short_option: r
+    long_option: dut-right-ip
+    is_optional: false
+
+results:
+  direction: portrait
+  attributes:
+    - name: Test_result
+      description: test result pass or fail
+      scope: short
+      type: string
+    - name: Stcv1_result
+      description: Stcv1_result
+      scope: short
+      type: json
+    - name: Stcv2_result
+      description: Stcv1_result
+      scope: short
+      type: json      
+
+cmd:
+  command:
+    - python3.6 $s{env:OPEN_CLI_HOME}/script/traffic-forward-test.py --labserver-ip ${labserver-ip} --stcv1-mgmt-ip ${stcv1-mgmt-ip} --stcv1-test-ip ${stcv1-test-ip} --stcv2-mgmt-ip ${stcv2-mgmt-ip} --stcv2-test-ip ${stcv2-test-ip} --dut-left-ip ${dut-left-ip} --dut-right-ip ${dut-right-ip} --result-json $s{tmp:result.json}
+  success_codes:
+    - 0
+  working_directory: .
+  output: $s{tmp:result.json}
+  result_map:
+    Test_result: $o{$.Test_result}
+    Stcv1_result: $o{$.Stcv1_result}
+    Stcv2_result: $o{$.Stcv2_result}   

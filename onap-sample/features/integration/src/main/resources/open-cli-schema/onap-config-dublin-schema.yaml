@@ -18,7 +18,7 @@ description: |
   Set Onap Common configurations
 
   example：
-  oclip --product onap-dublin onap-config --vim "{\"vim\":{\"name\":\"cmcc\",\"version\":\"1.0\"}}" --vnfm "{\"vnfm\":{\"name\":\"cmcc\",\"version\":\"11.0\"}}"
+  oclip --product onap-dublin onap-config --content "{\"vnf\":{\"vendor\":null,\"name\":null,\"vnf_csar\":null,\"vnfm_driver\":null},\"cloud\":{\"identityUrl\":null,\"username\":null,\"password\":null,\"region\":null,\"version\":null,\"tenant\":null},\"vnfm\":{\"hwvnfmdriver\":{\"name\":null,\"url\":null,\"username\":null,\"password\":null}},\"onap\":null,\"subscription\":null}"
 
 info:
   product: onap-dublin
@@ -33,17 +33,11 @@ parameters:
     long_option: profile-config-path
     default_value: $s{env:OPEN_CLI_HOME}
     is_optional: true
-  - name: vim
+  - name: content
     description: json string for vim
     type: string
     short_option: A
-    long_option: vim
-    is_optional: false
-  - name: vnfm
-    description: json string for vnfm
-    type: string
-    short_option: B
-    long_option: vnfm
+    long_option: content
     is_optional: false
 results:
   direction: portrait
@@ -54,7 +48,7 @@ results:
       type: string
 cmd:
   command:
-    -  python3 $s{env:OPEN_CLI_HOME}/script/onap-config.py --vim ${vim} --vnfm ${vnfm} --result-json $s{tmp:result.json}  --conf ${profile-config-path}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/onap-config.py --content ${content} --result-json $s{tmp:result.json}  --conf ${profile-config-path}
   success_codes:
     - 0
   working_directory: .

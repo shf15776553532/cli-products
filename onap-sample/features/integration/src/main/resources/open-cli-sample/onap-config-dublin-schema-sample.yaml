@@ -4,7 +4,7 @@ version: onap-dublin
 samples:
   sample1:
     name: onap-config
-    input: --vim "{\"vim\":{\"name\":\"cmcc\",\"version\":\"1.0\"}}" --vnfm "{\"vnfm\":{\"name\":\"cmcc\",\"version\":\"11.0\"}}"
+    input: --content "{\"vnf\":{\"vendor\":null,\"name\":null,\"vnf_csar\":null,\"vnfm_driver\":null},\"cloud\":{\"identityUrl\":null,\"username\":null,\"password\":null,\"region\":null,\"version\":null,\"tenant\":null},\"vnfm\":{\"hwvnfmdriver\":{\"name\":null,\"url\":null,\"username\":null,\"password\":null}},\"onap\":null,\"subscription\":null}"
     moco: onap-config-dublin-schema-moco.json
     output: |
       +------------+--------------------------------------------+

@@ -165,7 +165,7 @@ class ONAP:
     def setup_cloud_and_subscription(self):
         associate = False
         if not self.location_id and not self.location_version:
-            location_id = 'ocomp-region-{}'.format(self.conf['ONAP']['uid'])
+            location_id = 'ocomp-region-{}'.format('VTP123')
             logger.debug('----------complex-create----------')
             self.ocomp.run(command='complex-create',
                                     params={'physical-location-id': location_id,
@@ -195,7 +195,7 @@ class ONAP:
                     break
 
         if not self.cloud_id and not self.cloud_version:
-            cloud_id = 'OCOMP-{}'.format(self.conf['ONAP']['uid'])
+            cloud_id = 'OCOMP-{}'.format('VTP123')
             logger.debug('----------cloud-create----------')
             self.ocomp.run(command='cloud-create',
                                     params={'region-name': self.conf['cloud']['region'],
@@ -238,7 +238,7 @@ class ONAP:
 
         subscribe = False
         if not self.service_type_id and not self.service_type_version:
-            service_type_id = '{}-{}'.format(self.conf['subscription']['service-type'], self.conf['ONAP']['uid'])
+            service_type_id = '{}-{}'.format('tosca_vnf_validation', 'VTP123') # service-type + '-' + uid
             self.ocomp.run(command='service-type-create',
                                 params={'service-type': service_type_id,
                                         'service-type-id': service_type_id})
@@ -253,7 +253,7 @@ class ONAP:
                     break
 
         if not self.customer_id and not self.customer_version:
-            customer_id = '{}-{}'.format(self.conf['subscription']['customer-name'], self.conf['ONAP']['random'])
+            customer_id = '{}-{}'.format('ovp', str(random.randint(100, 999)) # customer-name + '-' + random
             logger.debug('----------customer-create----------')
             self.ocomp.run(command='customer-create',
                                 params={'customer-name': customer_id,
@@ -310,7 +310,7 @@ class ONAP:
                     break
 
         if not self.esr_vnfm_id and not self.esr_vnfm_version:
-            vnfmdriver = self.conf['ONAP']['vnfm-driver']
+            vnfmdriver = self.conf['ONAP']['vnfm-driver'] # the code here need to be adjusted according to the final config file structure
 
             esr_vnfm_id = str(uuid.uuid4())
             logger.debug('----------vnfm-create----------')
@@ -341,15 +341,16 @@ class ONAP:
         logger.debug('----------vfc-catalog-onboard-vnf----------')
         for vnf_key, vnf_values in vnfs.items():
             self.ocomp.run(command='vfc-catalog-onboard-vnf',
-                           params={'vnf-csar-uuid': vnf_values.get("vnf_uuid")})
+                           params={'vnf-csar-uuid': vnf_values.get("vnf_uuid")}) # the code here need to be adjusted according to the final config file structure
+
         time.sleep(60)
         logger.debug('----------vfc-catalog-onboard-ns----------')
         self.ocomp.run(command='vfc-catalog-onboard-ns',
-                                params={'ns-csar-uuid': self.conf['ns']['ns_uuid']})
+                                params={'ns-csar-uuid': self.conf['ns']['ns_uuid']}) # the code here need to be adjusted according to the final config file structure
 
         logger.debug('----------vfc-nslcm-create----------')
         output = self.ocomp.run(command='vfc-nslcm-create',
-                                params={'ns-csar-uuid': self.conf['ns']['ns_uuid'],
+                                params={'ns-csar-uuid': self.conf['ns']['ns_uuid'], # the code here need to be adjusted according to the final config file structure
                                         'ns-csar-name': 'stcv_ns',
                                         'customer-name': self.customer_id,
                                         'service-type': self.service_type_id})
@@ -395,9 +396,9 @@ class ONAP:
             self.ns_instance_id = None
 
         self.ocomp.run(command='vfc-catalog-delete-ns',
-                       params={'ns-csar-uuid': self.conf['ns']['ns_uuid']})
+                       params={'ns-csar-uuid': self.conf['ns']['ns_uuid']}) # the code here need to be adjusted according to the final config file structure
 
-        vnfs = self.conf["vnfs"]
+        vnfs = self.conf["vnfs"] # the code here need to be adjusted according to the final config file structure
         for vnf_key, vnf_values in vnfs.items():
             self.ocomp.run(command='vfc-catalog-delete-vnf',
                            params={'vnf-csar-uuid': vnf_values.get("vnf_uuid")})
@@ -493,11 +494,12 @@ class onap_api:
     west_test_net_name = "west_net"
     east_test_net_name = "east_net"
 
-    def __init__(self, conf, ns_instance_id, jobid):
+    def __init__(self, conf, ns_instance_id, jobid, tenant_id):
         self.conf = conf
         self.base_url = self.conf['vnfm']['gvnfmdriver']['url']
         self.ns_instance_id = ns_instance_id
         self.jobid = jobid
+        self.tenant_id = tenant_id        
         self.aai_header = {
             "Accept": "application/json",
             "Content-Type": "application/json",
@@ -536,7 +538,7 @@ class onap_api:
             "username": self.conf['cloud']['username'],
             "password": self.conf['cloud']['password'],
             "identity_api_version": "3",
-            "project_id": self.conf['ONAP']['tenant_id'], 
+            "project_id": self.tenant_id, 
             "project_domain_id": "default",
             "user_domain_name": "Default",
             "region": self.conf['cloud']['region'],
@@ -659,37 +661,32 @@ class onap_api:
 #Main
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="ONAP TOSCA VNF validation using ONAP CLI and Open Command Platform (OCOMP)", formatter_class=RawTextHelpFormatter)
-    parser.add_argument('--product', action='store', dest='product', help='OCOMP product to use, default to onap-dublin',
-                        default=os.environ.get('OPEN_CLI_PRODUCT_IN_USE'))
-    parser.add_argument('--profile', action='store', dest='profile', help='OCOMP profile to use, default to onap-dublin',
-                        default=os.environ.get('OPEN_CLI_PROFILE'))
-    parser.add_argument('--request-id', action='store', dest='request_id',
-                        help='Request Id to track the progress of running this script',
-                        default=os.environ.get('OPEN_CLI_REQUEST_ID'))
+    #parser.add_argument('--product', action='store', dest='product', help='OCOMP product to use, default to onap-dublin',
+    #                    default=os.environ.get('OPEN_CLI_PRODUCT_IN_USE'))
+    #parser.add_argument('--profile', action='store', dest='profile', help='OCOMP profile to use, default to onap-dublin',
+    #                    default=os.environ.get('OPEN_CLI_PROFILE'))
+    #parser.add_argument('--request-id', action='store', dest='request_id',
+    #                    help='Request Id to track the progress of running this script',
+    #                    default=os.environ.get('OPEN_CLI_REQUEST_ID'))
+    
+
+    #parser.add_argument('--vnfm-driver', action='store', dest='vnfm_driver', help='VNFM dirver type one of gvnfmdriver or hwvnfmdriver',
+    #                    choices=('gvnfmdriver', 'hwvnfmdriver'))
+    #parser.add_argument('--vnf-name', action='store', dest='vnf_name', help='VNF Name')
+    #parser.add_argument('--vendor-name', action='store', dest='vendor_name', help='VNF Vendor name')
     parser.add_argument('--conf', action='store', dest='config_file_path', help='Configuration file path')
-    #parser.add_argument('--vsp', action='store', dest='vsp', help='ONAP VSP file path')
-    #parser.add_argument('--vnf-csar', action='store', dest='vnf_csar', help='TOSCA VNF CSAR file path')
-    #parser.add_argument('--ns-csar', action='store', dest='ns_csar', help='TOSCA VNF CSAR file path')
-    parser.add_argument('--vnfm-driver', action='store', dest='vnfm_driver', help='VNFM dirver type one of gvnfmdriver or hwvnfmdriver',
-                        choices=('gvnfmdriver', 'hwvnfmdriver'))
-    parser.add_argument('--vnf-name', action='store', dest='vnf_name', help='VNF Name')
-    parser.add_argument('--vendor-name', action='store', dest='vendor_name', help='VNF Vendor name')
     parser.add_argument('--result-json', action='store', dest='result', help='Result json file. ' \
                                     '\nInstead of creating new ONAP objects while running this script \nand to use the existing ONAP object Ids, '\
                                     'use this \nresult json parameter. Object Id names are provided in configuration \nfile under ONAP section')
-    #parser.add_argument('--mode', action='store', dest='mode', help='Supports 5 mode.'\
-    #                    '\nsetup - Create the required VLM, service type, cloud, customer and \nsubscription as given in conf file' \
-    #                    '\nstandup - Create the VSP, VF Model, Service Model and provision\n the service using VFC'\
-    #                    '\ncleanup - Remove the ONAP objects which are either created during \nsetup and standup phase or provided by the user in result-json file ' \
-    #                               '\nCAUTION: If required, do not provide the existing ONAP object ids \nin result-json while doing the cleanup, to avoid them getting deleted.'\
-    #                    '\ncheckup - Check the deployment weather OCOMP is working properly or not' \
-    #                    '\nprovision - Run thru setup -> standup' \
-    #                    '\nvalidate -  run thru setup -> standup -> cleanup modes for end to end vnf validation',
-    #                               choices=('setup', 'standup', 'cleanup', 'checkup', 'provision', 'validate'))
+
 
     args = parser.parse_args()
     print (args)
 
+    product = 'onap-dublin'
+    profile = 'onap-dublin'
+
+'''
     if not args.product:
         product = 'onap-dublin'
     else:
@@ -704,14 +701,6 @@ if __name__ == '__main__':
     if not request_id:
         request_id = str(uuid.uuid4())
 
-#    vsp_csar = args.vsp
-#    vnf_csar = args.vnf_csar
-#    ns_csar = args.ns_csar
-
-    #if args.mode:
-    #    mode = args.mode
-    #else:
-    #    mode = 'checkup'
 
     if args.vnfm_driver:
         vnfm_driver = args.vnfm_driver
@@ -727,56 +716,33 @@ if __name__ == '__main__':
         vendor_name = args.vendor_name
     else:
         vendor_name = None
+'''
 
     conf = {}
     config_file = args.config_file_path
     with open(config_file) as json_file:
         conf = json.load(json_file)
-        if not 'uid' in conf['ONAP']:
+        #if not 'uid' in conf['ONAP']:
             conf['ONAP']['uid'] = ''.join(random.sample(string.ascii_lowercase,5))
-#        if vsp_csar:
-#            conf['vnf']['vsp-csar'] = vsp_csar
-#        if vnf_csar:
-#            conf['vnf']['vnf-csar'] = vnf_csar
-#        if ns_csar:
-#            conf['vnf']['ns-csar'] = vnf_csar
-#        if vnf_name:
-#            conf['vnf']['name'] = vnf_name
-#        conf['vnf']['name'] = '{}{}'.format(conf['vnf']['name'], conf['ONAP']['uid'])
-#        if vendor_name:
-#            conf['vnf']['vendor-name'] = vendor_name
-#        conf['vnf']['vendor-name'] = '{}-{}'.format(conf['vnf']['vendor-name'], conf['ONAP']['uid'])
+
 
     if args.result:
         result_file = args.result
-    #    with open(result_file) as r_file:
-    #        result_json = json.load(r_file)
-    #        for r in result_json:
-    #            if r in conf['ONAP']:
-    #                conf['ONAP'][r] = result_json[r]
     else:
         result_file = None
 
     print (OCOMP.version())
-
+    testresult = None
     onap = ONAP(product, profile, conf, request_id)
-    #onap_api = ONAP_api(conf['vnfm']['gvnfmdriver']['url'], conf) )----------------------------
-    #ns = STCDemoNS(conf, onap_api)----------------------------
+
 
     try:
         onap.setup_cloud_and_subscription()
         job_id = onap.create_vnf() # onboard vnf,onboard ns,create ns, instantiate ns
-        ns = onap_api(conf, onap.ns_instance_id, job_id)
+        ns = onap_api(conf, onap.ns_instance_id, job_id,onap.tenant_id)
         ns.get_vnfs_info()
-        testresult = None
-        #test = SimpleTrafficTest(labserver_ip=conf['ONAP']['labserver_ip'],
-        #                        stcv_west_mgmt_ip=ns.stcv_west_ip,
-        #                        stcv_west_test_port_ip=ns.stcv_west_test_port_ip,
-        #                        stcv_east_mgmt_ip=ns.stcv_east_ip,
-        #                        stcv_east_test_port_ip=ns.stcv_east_test_port_ip,
-        #                        dut_left_ip=ns.dut_left_ip,
-        #                        dut_right_ip=ns.dut_right_ip)
-        #testresult = test.run(port_rate=10, duration=60)
+        
+
         testresult = onap.traffic_test(labserver=conf['ONAP']['labserver_ip'], 
                                         stcv1_mgmtip=ns._stcv_west_ip, 
                                         stcv1_testip=ns._stcv_west_test_port_ip, 

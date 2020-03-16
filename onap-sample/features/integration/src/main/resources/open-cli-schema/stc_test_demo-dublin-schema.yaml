@@ -82,56 +82,19 @@ info:
   author: ONAP VTP Team
 
 parameters:
-  - name: conf
+  - name: config_json
     description: Configuration file path
     type: string
-    short_option: C
-    long_option: conf
+    short_option: c
+    long_option: config_json
     default_value: $s{env:OPEN_CLI_HOME}/conf/stc_test_demo.json
     is_optional: false
-  - name: product
-    description: product value
-    type: string
-    short_option: P
-    long_option: product
-    is_optional: true
-  - name: profile
-    description: profile value
-    type: string
-    short_option: p
-    long_option: profile
-    is_optional: true
-  - name: request-id
-    description: request-id value
-    type: string
-    short_option: r
-    long_option: request-id
-    is_optional: true
-  - name: vnfm-driver
-    description: VNFM driver to use. One of gvnfmdriver or hwvnfmdriver
-    type: string
-    short_option: c
-    long_option: vnfm-driver
-    is_optional: true
-  - name: vnf-name
-    description: VNF Name
-    type: string
-    short_option: A
-    long_option: vnf-name
-    is_optional: true
-  - name: vendor-name
-    description: VNF Vendor Name
-    type: string
-    short_option: B
-    long_option: vendor-name
-    is_optional: true
   - name: result-json
     description: VNF Vendor Name
     type: string
     short_option: j
     long_option: result-json
     is_optional: false
-
 
 
 
@@ -146,7 +109,7 @@ results:
 
 cmd:
   command:
-    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --vendor-name ${vendor-name} --vnf-name ${vnf-name} --result-json $s{tmp:result.json} --conf ${conf} --vnfm-driver ${vnfm-driver}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --conf ${config_json} --result-json $s{tmp:result.json}
   success_codes:
     - 0
   working_directory: .

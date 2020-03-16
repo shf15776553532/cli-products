@@ -27,7 +27,7 @@ class Config(object):
     def __init__(self, file_path, paras={}):
         self.paras = paras
         self.file_name = str(uuid.uuid1()) + ".json"
-        self.file_path = file_path + "/data/profiles/" + self.file_name
+        self.file_path = file_path + "/conf" + self.file_name
 
     def run(self):
         with open(self.file_path, 'w+') as file:

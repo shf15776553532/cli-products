@@ -15,11 +15,13 @@
 open_cli_schema_version: 1.0
 name: stc_test_demo
 description: |
-  ONAP TOSCA VNF validation using ONAP CLI and Open Command Platform (OCOMP)
+A demo that shows the workflow of Automation test  for VNF's functionality
 
-  On every execution, it reports the ONAP managed object's ids in result onap-objects attribute. so
-  if requires, these attribute value could be passed in input parameter onap-objects on subsequent
-  executions to avoid recreation of these ONA managed objects
+In this demo it uses the network service that contains 3 VNFs, stcv01 (Spirent Testcenter virtual) , stcv02 as the test instrument and OpenWrt as the SUT.
+On every execution, the NS and the VNFs will be onboarded,  created and instantiated. 
+Then the script will control stcv01 and stcv02 sending traffic forwarded by OpenWrt to test layer3 traffic forwarding functionality of OpenWrt.
+On every execution, it reports a test result pass or fail which is based on the traffic test result, 
+for example , the packet loss in forwarding is less than 10%, then the test result is Pass.
 
   prerequisites
   -------------
@@ -39,6 +41,7 @@ description: |
     set aai:host-password=AAI
     set vfc:host-url=http://159.138.8.8:30280
     set multicloud:host-url=http://159.138.8.8:30280
+
 
     NOTE:
     By default, SDC onboarding service does not provide node port, which is available to access from external ONAP network.
@@ -75,6 +78,8 @@ description: |
     oclip --product onap-dublin --profile onap-dublin sdc-consumer-create --consumer-name ocomp
 
   3. Update the cloud and vnfm driver details in the configuration file $OPEN_CLI_HOME/conf/vnf-tosca-provision.json
+
+  4. A labserver which is used for Spirent Testcenter REST API calling and a Spirent License server has valid Testcenter license need to be deployed before executing.
 
 info:
   product: onap-dublin

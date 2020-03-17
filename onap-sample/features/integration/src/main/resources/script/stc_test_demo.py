@@ -358,7 +358,7 @@ class ONAP:
         logger.debug('----------vfc-nslcm-instantiate----------')        
         output = self.ocomp.run(command='vfc-nslcm-instantiate',
                                 params={'ns-instance-id': self.ns_instance_id,
-                                        'location': self.cloud_id+'_RegionOne',
+                                        'location': self.cloud_id+'_'+self.conf['cloud']['region'],
                                         'sdn-controller-id': self.esr_vnfm_id})
         jobid = output['job-id']
         return jobid

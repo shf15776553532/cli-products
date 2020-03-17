@@ -36,8 +36,6 @@ from argparse import RawTextHelpFormatter
 
 ############copied from spirent script##########
 import logging
-from simple_traffic import SimpleTrafficTest
-#from stc_demo_ns import STCDemoNS
 import requests
 import openstack
 
@@ -47,7 +45,6 @@ logger.addHandler(hdlr=handler)
 logger.setLevel(logging.DEBUG)
 logger.propagate=True
 
-#labserver_ip = "192.168.235.98"
 ################################################
 
 if platform.system() == 'Windows':

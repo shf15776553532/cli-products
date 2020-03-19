@@ -13,7 +13,7 @@
 # limitations under the License.
 
 open_cli_schema_version: 1.0
-name: stc_test_demo
+name: stc-test-demo
 description: |
 A demo that shows the workflow of Automation test  for VNF's functionality
 
@@ -51,7 +51,7 @@ for example , the packet loss in forwarding is less than 10%, then the test resu
 
       oclip --product onap-dublin microservice-create --host-url http://159.138.8.8:30280 --service-name sdcobs --service-version v1.0 --service-url /onboarding-api/v1.0 --path /onboarding-api/v1.0  --node-ip 172.16.1.0 --node-port 8445 --enable-ssl
 
-      Find out SDC onboarding service IP and port details as given here:
+      Find out SDC onboarding service IP and port details as given here
         [root@onap-dublin-vfw-93996-50c1z ~]# kubectl get pods -n onap -o wide | grep sdc-onboarding-be
         dev-sdc-sdc-onboarding-be-5564b877c8-vpwr5                        2/2     Running            0          29d   172.16.1.0     192.168.2.163   <none>           <none>
         dev-sdc-sdc-onboarding-be-cassandra-init-mtvz6                    0/1     Completed          0          29d   172.16.0.220   192.168.2.163   <none>           <none>

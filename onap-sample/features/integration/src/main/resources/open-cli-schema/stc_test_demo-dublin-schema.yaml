@@ -94,6 +94,30 @@ parameters:
     long_option: config_json
     default_value: $s{env:OPEN_CLI_HOME}/conf/stc_test_demo.json
     is_optional: false
+  - name: stcv1_uuid
+    description: The uuid value of stcv instrument from SDC
+    type: string
+    short_option: s
+    long_option: stcv1_uuid
+    is_optional: false
+  - name: stcv2_uuid
+    description: The uuid value of stcv instrument from SDC
+    type: string
+    short_option: t
+    long_option: stcv2_uuid
+    is_optional: false 
+  - name: sut_uuid
+    description: The uuid value of one openwrt from SDC
+    type: string
+    short_option: o
+    long_option: sut_uuid
+    is_optional: false 
+  - name: ns_uuid
+    description: The uuid value of Network Service from SDC
+    type: string
+    short_option: n
+    long_option: ns_uuid
+    is_optional: false 
   - name: result-json
     description: VNF Vendor Name
     type: string
@@ -114,7 +138,7 @@ results:
 
 cmd:
   command:
-    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --conf ${config_json} --result-json $s{tmp:result.json}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --conf ${config_json} --stcv1_uuid ${stcv1_uuid} --stcv2_uuid ${stcv2_uuid} --sut_uuid ${sut_uuid} --ns_uuid ${ns_uuid} --result-json $s{tmp:result.json}
   success_codes:
     - 0
   working_directory: .

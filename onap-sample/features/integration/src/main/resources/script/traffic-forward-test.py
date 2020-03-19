@@ -17,6 +17,7 @@ import sys
 import json
 import argparse
 from argparse import RawTextHelpFormatter
+import traceback
 
 from stcrestclient import stchttp
 
@@ -273,17 +274,13 @@ class SimpleTrafficTest(object):
                            'Stcv2_tx_bit': self.result2["tx_bit_count"],
                            'Stcv2_rx_frame': self.result2["rx_frame_count"],
                            'Stcv2_rx_bit': self.result2["rx_bit_count"]}
-            self.end_session()
+            #self.end_session()
         except Exception as e: 
             print(e)
             self.testpass = 'FAIL'
 
         finally:
-            #self.end_session()
-            #result_dict = {'Test_result': self.testpass,
-            #               'Stcv1_result': self.result1,
-            #               'Stcv2_result': self.result2}
-            pass
+            self.end_session()
             return result_dict
 
         
@@ -308,10 +305,12 @@ if __name__ == "__main__":
                              stcv_east_test_port_ip = args.stcv_east_test_port_ip,
                              dut_left_ip = args.dut_left_ip,
                              dut_right_ip = args.dut_right_ip)
+    testresult = {}
     try:
         testresult = test.run()
     except Exception as e:
         logger.debug(e)
+        traceback.print_exc()
     finally:
         with open(args.resultjson, "w") as f:
             f.write(json.dumps(testresult, default=lambda x: x.__dict__))

@@ -116,7 +116,7 @@ results:
 
 cmd:
   command:
-    - python3.6 $s{env:OPEN_CLI_HOME}/script/traffic-forward-test.py --labserver-ip ${labserver-ip} --stcv1-mgmt-ip ${stcv1-mgmt-ip} --stcv1-test-ip ${stcv1-test-ip} --stcv2-mgmt-ip ${stcv2-mgmt-ip} --stcv2-test-ip ${stcv2-test-ip} --dut-left-ip ${dut-left-ip} --dut-right-ip ${dut-right-ip} --result-json $s{tmp:result.json}
+    - python3 $s{env:OPEN_CLI_HOME}/script/traffic-forward-test.py --labserver-ip ${labserver-ip} --stcv1-mgmt-ip ${stcv1-mgmt-ip} --stcv1-test-ip ${stcv1-test-ip} --stcv2-mgmt-ip ${stcv2-mgmt-ip} --stcv2-test-ip ${stcv2-test-ip} --dut-left-ip ${dut-left-ip} --dut-right-ip ${dut-right-ip} --result-json $s{tmp:result.json}
   success_codes:
     - 0
   working_directory: .

@@ -79,7 +79,11 @@ class SimpleTrafficTest(object):
         self.stc.disconnectall()
         sess_list = self.stc.sessions()
         for sess_id in sess_list:
-            self.stc.end_session(sid=sess_id)
+            self.stc.end_session('kill',sess_id)
+
+self.stc.end_session('kill', ' - '.join((session_name, user_name)))
+
+
 
     def get_port_location(self):
         port_list = []

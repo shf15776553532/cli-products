@@ -26,11 +26,11 @@ info:
   author: ONAP VTP Team
 
 parameters:
-  - name: profile-config-path
-    description: Configuration file path
+  - name: config-path
+    description: Configuration path
     type: string
     short_option: x
-    long_option: profile-config-path
+    long_option: config-path
     default_value: $s{env:OPEN_CLI_HOME}
     is_optional: true
   - name: content
@@ -48,7 +48,7 @@ results:
       type: string
 cmd:
   command:
-    -  python3 $s{env:OPEN_CLI_HOME}/script/onap-config.py --content ${content} --result-json $s{tmp:result.json}  --conf ${profile-config-path}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/onap-config.py --content ${content} --result-json $s{tmp:result.json}  --conf ${config-path}
   success_codes:
     - 0
   working_directory: .

@@ -16,6 +16,7 @@
 import argparse
 import json
 import uuid
+import os
 from argparse import RawTextHelpFormatter
 
 
@@ -26,11 +27,15 @@ class Config(object):
 
     def __init__(self, file_path, paras={}):
         self.paras = paras
-        self.file_name = str(uuid.uuid1()) + ".json"
-        self.file_path = file_path + "/conf/" + self.file_name
+
+        file_path = file_path + "/conf/tmp/"
+        is_exists = os.path.exists(file_path)
+        if not is_exists:
+            os.makedirs(file_path)
+        self.file_name = file_path + str(uuid.uuid1()) + ".json"
 
     def run(self):
-        with open(self.file_path, 'w+') as file:
+        with open(self.file_name, 'w+') as file:
             json.dump(self.paras, file, sort_keys=True, indent=2)
 
     def __str__(self):

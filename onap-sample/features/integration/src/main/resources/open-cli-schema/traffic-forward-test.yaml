@@ -21,7 +21,7 @@ description: |
 info:
   product: onap-dublin
   service: vfc
-  author: ONAP VTP Team kanagaraj.manickam@huawei.com
+  author: ONAP VTP Team
 
 parameters:
   - name: format

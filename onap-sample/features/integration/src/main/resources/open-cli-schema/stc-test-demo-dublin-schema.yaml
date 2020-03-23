@@ -15,54 +15,51 @@
 open_cli_schema_version: 1.0
 name: stc-test-demo
 description: |
-  A demo that shows the workflow of Automation test  for VNF functionality
-
+  A demo that shows the workflow of Automation test for VNF functionality
 
 info:
   product: onap-dublin
-  service: vfc
+  service: vnf-validation
   author: ONAP VTP Team
 
 parameters:
-  - name: config_json
+  - name: config-json
     description: Configuration file path
     type: string
     short_option: c
-    long_option: config_json
+    long_option: config-json
     default_value: $s{env:OPEN_CLI_HOME}/conf/stc_test_demo.json
-    is_optional: false
+    is_optional: true
   - name: stcv1_uuid
     description: The uuid value of stcv instrument from SDC
     type: string
-    short_option: s
+    short_option: T
     long_option: stcv1_uuid
     is_optional: false
   - name: stcv2_uuid
     description: The uuid value of stcv instrument from SDC
     type: string
-    short_option: t
+    short_option: C
     long_option: stcv2_uuid
     is_optional: false 
   - name: sut_uuid
     description: The uuid value of one openwrt from SDC
     type: string
-    short_option: o
+    short_option: S
     long_option: sut_uuid
     is_optional: false 
   - name: ns_uuid
     description: The uuid value of Network Service from SDC
     type: string
-    short_option: n
+    short_option: N
     long_option: ns_uuid
     is_optional: false 
   - name: result-json
-    description: VNF Vendor Name
+    description: path of result-json file
     type: string
     short_option: j
     long_option: result-json
-    is_optional: false
-
-
+    is_optional: true
 
 results:
   direction: portrait
@@ -72,10 +69,9 @@ results:
       scope: short
       type: string
 
-
 cmd:
   command:
-    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --conf ${config_json} --stcv1_uuid ${stcv1_uuid} --stcv2_uuid ${stcv2_uuid} --sut_uuid ${sut_uuid} --ns_uuid ${ns_uuid} --result-json $s{tmp:result.json}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --conf ${config-json} --stcv1_uuid ${stcv1_uuid} --stcv2_uuid ${stcv2_uuid} --sut_uuid ${sut_uuid} --ns_uuid ${ns_uuid} --result-json $s{tmp:result.json}
   success_codes:
     - 0
   working_directory: .

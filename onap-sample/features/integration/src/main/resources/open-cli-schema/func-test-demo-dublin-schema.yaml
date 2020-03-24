@@ -28,7 +28,7 @@ parameters:
     type: string
     short_option: c
     long_option: config-json
-    default_value: $s{env:OPEN_CLI_HOME}/conf/stc_test_demo.json
+    default_value: $s{env:OPEN_CLI_HOME}/conf/func-test-demo.json
     is_optional: true
   - name: stcv1_uuid
     description: The uuid value of stcv instrument from SDC

@@ -28,11 +28,12 @@ logger.setLevel(logging.DEBUG)
 
 class SimpleTrafficTest(object):
 
-    def __init__(self, labserver_ip,
+    def __init__(self, labserver_ip, user_name,
                  stcv_west_mgmt_ip, stcv_west_test_port_ip,
                  stcv_east_mgmt_ip, stcv_east_test_port_ip,
                  dut_left_ip, dut_right_ip):
         self.labserver_ip = labserver_ip
+        self.user_name = user_name
         self.result1 = None
         self.result2 = None
         self.testpass = None
@@ -60,7 +61,7 @@ class SimpleTrafficTest(object):
 
         self.stc = stchttp.StcHttp(labserver_ip, port=80)
 
-        self.user_name = "csu_user"
+        #self.user_name = "csu_user"
         time_str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         test_name = "simpletraffic - " + time_str
         sess_id = self.user_name + " - " + test_name
@@ -81,7 +82,7 @@ class SimpleTrafficTest(object):
         for sess_id in sess_list:
             self.stc.end_session('kill',sess_id)
 
-self.stc.end_session('kill', ' - '.join((session_name, user_name)))
+
 
 
 
@@ -293,6 +294,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="run this script to do traffic forwarding test with stcv and openwrt", formatter_class=RawTextHelpFormatter)
     parser.add_argument('--result-json', action='store', dest='resultjson', help='file path of json file contains result')
     parser.add_argument('--labserver-ip', action='store', dest='labserver_ip', help='labserver_ip')
+    parser.add_argument('--username', action='store', dest='username', help='username')
     parser.add_argument('--stcv1-mgmt-ip', action='store', dest='stcv_west_ip', help='stcv_west_ip')
     parser.add_argument('--stcv1-test-ip', action='store', dest='stcv_west_test_port_ip', help='stcv_west_test_port_ip')
     parser.add_argument('--stcv2-mgmt-ip', action='store', dest='stcv_east_ip', help='stcv_east_ip')
@@ -303,6 +305,7 @@ if __name__ == "__main__":
 
 
     test = SimpleTrafficTest(labserver_ip = args.labserver_ip,
+                             user_name = args.username,
                              stcv_west_mgmt_ip = args.stcv_west_ip,
                              stcv_west_test_port_ip = args.stcv_west_test_port_ip,
                              stcv_east_mgmt_ip = args.stcv_east_ip,

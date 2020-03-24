@@ -13,7 +13,7 @@
 # limitations under the License.
 
 open_cli_schema_version: 1.0
-name: stc-test-demo
+name: func-test-demo
 description: |
   A demo that shows the workflow of Automation test for VNF functionality
 
@@ -68,13 +68,53 @@ results:
       description: test result pass or fail
       scope: short
       type: string
+    - name: Stcv1_tx_frame
+      description: Stcv1_tx_frame
+      scope: short
+      type: string
+    - name: Stcv1_tx_bit
+      description: Stcv1_tx_bit
+      scope: short
+      type: string
+    - name: Stcv1_rx_frame
+      description: Stcv1_rx_frame
+      scope: short
+      type: string
+    - name: Stcv1_rx_bit
+      description: Stcv1_rx_bit
+      scope: short
+      type: string
+    - name: Stcv2_tx_frame
+      description: Stcv2_tx_frame
+      scope: short
+      type: string
+    - name: Stcv2_tx_bit
+      description: Stcv2_tx_bit
+      scope: short
+      type: string
+    - name: Stcv2_rx_frame
+      description: Stcv2_rx_frame
+      scope: short
+      type: string 
+    - name: Stcv2_rx_bit
+      description: Stcv2_rx_bit
+      scope: short
+      type: string
 
 cmd:
   command:
-    -  python3 $s{env:OPEN_CLI_HOME}/script/stc_test_demo.py --conf ${config-json} --stcv1_uuid ${stcv1_uuid} --stcv2_uuid ${stcv2_uuid} --sut_uuid ${sut_uuid} --ns_uuid ${ns_uuid} --result-json $s{tmp:result.json}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/func-test-demo.py --conf ${config-json} --stcv1_uuid ${stcv1_uuid} --stcv2_uuid ${stcv2_uuid} --sut_uuid ${sut_uuid} --ns_uuid ${ns_uuid} --result-json $s{tmp:result.json}
   success_codes:
     - 0
   working_directory: .
   output: $s{tmp:result.json}
   result_map:
     Test_result: $o{$.Test_result}
+    Stcv1_tx_frame : $o{$.Stcv1_tx_frame}
+    Stcv1_tx_bit : $o{$.Stcv1_tx_bit}
+    Stcv1_rx_frame : $o{$.Stcv1_rx_frame}
+    Stcv1_rx_bit : $o{$.Stcv1_rx_bit}
+    Stcv2_tx_frame : $o{$.Stcv2_tx_frame}
+    Stcv2_tx_bit : $o{$.Stcv2_tx_bit}
+    Stcv2_rx_frame : $o{$.Stcv2_rx_frame}
+    Stcv2_rx_bit : $o{$.Stcv2_rx_bit}    

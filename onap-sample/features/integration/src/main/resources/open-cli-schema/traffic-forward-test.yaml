@@ -15,7 +15,7 @@
 open_cli_schema_version: 1.0
 name: traffic-forward-test
 description: |
-  ONAP TOSCA VNF validation using ONAP CLI and Open Command Platform (OCOMP)
+  Execute the script to control STCV instruments doing the traffic forwarding test
 
 
 info:
@@ -36,6 +36,12 @@ parameters:
     type: string
     short_option: L
     long_option: labserver-ip
+    is_optional: false
+  - name: username
+    description: The username used for create session
+    type: string
+    short_option: U
+    long_option: username
     is_optional: false
   - name: stcv1-mgmt-ip
     description: The MGMT IP address of stcv west
@@ -116,7 +122,7 @@ results:
 
 cmd:
   command:
-    - python3 $s{env:OPEN_CLI_HOME}/script/traffic-forward-test.py --labserver-ip ${labserver-ip} --stcv1-mgmt-ip ${stcv1-mgmt-ip} --stcv1-test-ip ${stcv1-test-ip} --stcv2-mgmt-ip ${stcv2-mgmt-ip} --stcv2-test-ip ${stcv2-test-ip} --dut-left-ip ${dut-left-ip} --dut-right-ip ${dut-right-ip} --result-json $s{tmp:result.json}
+    - python3 $s{env:OPEN_CLI_HOME}/script/traffic-forward-test.py --labserver-ip ${labserver-ip} --username ${username} --stcv1-mgmt-ip ${stcv1-mgmt-ip} --stcv1-test-ip ${stcv1-test-ip} --stcv2-mgmt-ip ${stcv2-mgmt-ip} --stcv2-test-ip ${stcv2-test-ip} --dut-left-ip ${dut-left-ip} --dut-right-ip ${dut-right-ip} --result-json $s{tmp:result.json}
   success_codes:
     - 0
   working_directory: .

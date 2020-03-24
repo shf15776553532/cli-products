@@ -372,11 +372,12 @@ class ONAP:
         jobid = output['job-id']
         return jobid
 
-    def traffic_test(self, labserver, stcv1_mgmtip, stcv1_testip, stcv2_mgmtip, stcv2_testip, dut_leftip, dut_rightip):
+    def traffic_test(self, labserver, username, stcv1_mgmtip, stcv1_testip, stcv2_mgmtip, stcv2_testip, dut_leftip, dut_rightip):
         logger.debug('---------- execute traffic test script ----------')
         output = self.ocomp.run(command='traffic-forward-test',
                          params={
                                  'labserver-ip': labserver,
+                                 'username': username,
                                  'stcv1-mgmt-ip': stcv1_mgmtip,
                                  'stcv1-test-ip': stcv1_testip,
                                  'stcv2-mgmt-ip': stcv2_mgmtip,
@@ -641,24 +642,25 @@ class onap_api:
         return instance_info
 
     def get_vnfs_info(self):
+        logger.debug('----------get_vnf_info_start----------')
         self.waitProcessFinished(self.ns_instance_id, self.jobid, "instantiate")
         #time.sleep(15)
         self.set_openstack_client()
         stc_west = self.get_stc_west_instance_info()
         self._stcv_west_ip = stc_west["mgmt_ip"]
         self._stcv_west_test_port_ip = stc_west["test_port_ip"]
-        print('stcv_west_ip: {} , stcv_west_test_ip: {}'.format(self._stcv_west_ip,self._stcv_west_test_port_ip))        
+        logger.debug('stcv_west_ip: {} , stcv_west_test_ip: {}'.format(self._stcv_west_ip,self._stcv_west_test_port_ip))        
 
         stc_east = self.get_stc_east_instance_info()
         self._stcv_east_ip = stc_east["mgmt_ip"]
         self._stcv_east_test_port_ip = stc_east["test_port_ip"]
-        print('stcv_east_ip: {} , stcv_east_test_ip: {}'.format(self._stcv_east_ip,self._stcv_east_test_port_ip))
+        logger.debug('stcv_east_ip: {} , stcv_east_test_ip: {}'.format(self._stcv_east_ip,self._stcv_east_test_port_ip))
 
         dut = self.get_dut_instance_info()
         self._dut_left_ip = dut["left_port_ip"]
         self._dut_right_ip = dut["right_port_ip"]
-        print('dut_left_ip: {} , dut_right_ip: {}'.format(self._dut_left_ip,self._dut_right_ip))
-        print('----------get_vnf_info_done----------')
+        logger.debug('dut_left_ip: {} , dut_right_ip: {}'.format(self._dut_left_ip,self._dut_right_ip))
+        logger.debug('----------get_vnf_info_done----------')
 
 ########## Codes above this line moved from stc_demo_ns and onap_api #############
 
@@ -699,6 +701,9 @@ if __name__ == '__main__':
 
     conf = {}
     config_file = args.config_file_path
+	if config_file[0]=='"' and config_file[-1]=='"':
+	    config_file = config_file[1:-1]
+
     with open(config_file) as json_file:
         conf = json.load(json_file)
         conf["vnf_uuids"] = {"stcv01": args.stcv1_uuid, "stcv02": args.stcv2_uuid, "openwrt": args.sut_uuid}
@@ -724,6 +729,7 @@ if __name__ == '__main__':
         ns = onap_api(conf, onap.ns_instance_id, job_id,onap.tenant_id)
         ns.get_vnfs_info()
         testresult = onap.traffic_test(labserver=conf['instrument']['instrument_mgs']['mnt_address'], 
+                                        username = conf['instrument']['instrument_mgs']['username'],
                                         stcv1_mgmtip=ns._stcv_west_ip, 
                                         stcv1_testip=ns._stcv_west_test_port_ip, 
                                         stcv2_mgmtip=ns._stcv_east_ip, 

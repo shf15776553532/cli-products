@@ -30,6 +30,19 @@ parameters:
     long_option: config-json
     default_value: $s{env:OPEN_CLI_HOME}/conf/func-test-demo.json
     is_optional: true
+  - name: profile
+    description: the profile used in OCOMP
+    type: string
+    short_option: P
+    long_option: profile
+    default_value: onap-dublin
+    is_optional: false
+  - name: request-id
+    description: Request Id to track the progress of running this script
+    type: string
+    short_option: R
+    long_option: request-id
+    is_optional: false
   - name: stcv1_uuid
     description: The uuid value of stcv instrument from SDC
     type: string
@@ -103,7 +116,7 @@ results:
 
 cmd:
   command:
-    -  python3 $s{env:OPEN_CLI_HOME}/script/func-test-demo.py --conf ${config-json} --stcv1_uuid ${stcv1_uuid} --stcv2_uuid ${stcv2_uuid} --sut_uuid ${sut_uuid} --ns_uuid ${ns_uuid} --result-json $s{tmp:result.json}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/func-test-demo.py --conf ${config-json} --profile ${profile} --request-id ${request-id} --stcv1_uuid ${stcv1_uuid} --stcv2_uuid ${stcv2_uuid} --sut_uuid ${sut_uuid} --ns_uuid ${ns_uuid} --result-json $s{tmp:result.json}
   success_codes:
     - 0
   working_directory: .

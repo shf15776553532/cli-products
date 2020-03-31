@@ -677,11 +677,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="ONAP TOSCA VNF validation using ONAP CLI and Open Command Platform (OCOMP)", formatter_class=RawTextHelpFormatter)
     #parser.add_argument('--product', action='store', dest='product', help='OCOMP product to use, default to onap-dublin',
     #                    default=os.environ.get('OPEN_CLI_PRODUCT_IN_USE'))
-    #parser.add_argument('--profile', action='store', dest='profile', help='OCOMP profile to use, default to onap-dublin',
-    #                    default=os.environ.get('OPEN_CLI_PROFILE'))
-    #parser.add_argument('--request-id', action='store', dest='request_id',
-    #                    help='Request Id to track the progress of running this script',
-    #                    default=os.environ.get('OPEN_CLI_REQUEST_ID'))
+    parser.add_argument('--profile', action='store', dest='profile', help='OCOMP profile to use, default to onap-dublin',
+                        default = 'onap-dublin' )
+    parser.add_argument('--request-id', action='store', dest='request_id', help='Request Id to track the progress of running this script')
     
 
     #parser.add_argument('--vnfm-driver', action='store', dest='vnfm_driver', help='VNFM dirver type one of gvnfmdriver or hwvnfmdriver',
@@ -702,12 +700,12 @@ if __name__ == '__main__':
     print (args)
 
     product = 'onap-dublin'
-    profile = 'onap-dublin'
+    profile = args.profile
 
     conf = {}
     config_file = args.config_file_path
-	if config_file[0]=='"' and config_file[-1]=='"':
-	    config_file = config_file[1:-1]
+    if config_file[0]=='"' and config_file[-1]=='"':
+        config_file = config_file[1:-1]
 
     with open(config_file) as json_file:
         conf = json.load(json_file)
@@ -720,7 +718,8 @@ if __name__ == '__main__':
     else:
         result_file = None
 
-    request_id = str(uuid.uuid4())
+
+    request_id = args.request_id
 
 
     print (OCOMP.version())

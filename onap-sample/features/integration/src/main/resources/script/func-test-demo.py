@@ -17,7 +17,6 @@
 # Used in devops, testing, certification and production
 # NOTE: This feature is avaialble as ONAP CLI vnf-tosca-lcm
 #
-# Author: kanagaraj.manickam@huawei.com 
 #
 
 import json
@@ -150,21 +149,27 @@ class ONAP:
                  debug = False):
         self.conf = conf or {}
         self.ocomp = OCOMP(request_id, debug, product=product, profile=profile)
-        #self.preload()
+        self.preload()
         self.tag = 'Powered by Open Command Platform - OCOMP'
-        self.ns_instance_id = None
+        
 
     def preload(self):
-        if self.conf['ONAP']:
-            for attr in self.conf['ONAP']:
-                setattr(self, attr, self.conf['ONAP'][attr])
-        else:
-            self.conf['ONAP'] = {}
+        self.location_id = None
+        self.location_version = None
+        self.cloud_id = None
+        self.cloud_version = None
+        self.service_type_id = None
+        self.service_type_version = None
+        self.customer_id = None
+        self.customer_version = None
+        self.subscription_version = None
+        self.esr_vnfm_id = None
+        self.esr_vnfm_version = None
+        self.ns_instance_id = None
 
     def setup_cloud_and_subscription(self):
         associate = False
-#        if not self.location_id and not self.location_version:
-        if not False :
+        if not self.location_id and not self.location_version:
             location_id = 'ocomp-region-{}'.format('VTP123')
             logger.debug('----------complex-create----------')
             self.ocomp.run(command='complex-create',
@@ -194,8 +199,7 @@ class ONAP:
                     self.location_version = location['resource-version']
                     break
 
-        #if not self.cloud_id and not self.cloud_version:
-        if not False:
+        if not self.cloud_id and not self.cloud_version:
             cloud_id = 'OCOMP-{}'.format('VTP123')
             logger.debug('----------cloud-create----------')
             self.ocomp.run(command='cloud-create',
@@ -238,8 +242,7 @@ class ONAP:
                        params={'cloud-region': self.conf['cloud']['region'], 'cloud-owner': self.cloud_id})
 
         subscribe = False
-#        if not self.service_type_id and not self.service_type_version:
-        if not False:
+        if not self.service_type_id and not self.service_type_version:
             service_type_id = '{}-{}'.format('tosca_vnf_validation', 'VTP123') # service-type + '-' + uid
             self.ocomp.run(command='service-type-create',
                                 params={'service-type': service_type_id,
@@ -254,8 +257,7 @@ class ONAP:
                     self.service_type_version = st['resource-version']
                     break
 
-#        if not self.customer_id and not self.customer_version:
-        if not False:
+        if not self.customer_id and not self.customer_version:
             customer_id = '{}-{}'.format('ovp','123') # customer-name + - + random
             logger.debug('----------customer-create----------')
             self.ocomp.run(command='customer-create',
@@ -302,8 +304,7 @@ class ONAP:
                                             'service-type': self.service_type_id,
                                             'tenant-name': self.conf['cloud']['tenant']})
 
-        #if not self.subscription_version:
-        if not False:
+        if not self.subscription_version:
             output = self.ocomp.run(command='subscription-list', params={
                     'customer-name': self.customer_id
                     })
@@ -313,8 +314,7 @@ class ONAP:
                     self.subscription_version = subscription['resource-version']
                     break
 
-        #if not self.esr_vnfm_id and not self.esr_vnfm_version:
-        if not False:
+        if not self.esr_vnfm_id and not self.esr_vnfm_version:
             vnfmdriver = self.conf['vnf']['vnfm_driver'] 
 
             esr_vnfm_id = str(uuid.uuid4())
@@ -664,7 +664,12 @@ class onap_api:
 
 ########## Codes above this line moved from stc_demo_ns and onap_api #############
 
-
+class FailureException(Exception):
+    "this is user's Exception for check the failed test result "
+    def __init__(self):
+        self.failure = 'Test case execution finished but the testresult is failed.'
+    def __str__(self):
+        return self.failure
 
 
 #Main
@@ -719,7 +724,7 @@ if __name__ == '__main__':
 
 
     print (OCOMP.version())
-    testresult = None
+    testresult = {}
     onap = ONAP(product, profile, conf, request_id)
 
 
@@ -748,14 +753,15 @@ if __name__ == '__main__':
         onap.cleanup()
         print ('Done')
 
-
-        #onap_result = json.dumps(onap, default=lambda x: x.__dict__)
-        #print(onap_result)
-
         if result_file:
-            #Remove conf and ocomp from the onap object
-            #for attr in ['ocomp', 'tag', 'conf']:
-            #    delattr(onap, attr)
-
             with open(result_file, "w") as f:
                 f.write(json.dumps(testresult, default=lambda x: x.__dict__))
+
+        if 'Test_result' in testresult:
+            if testresult['Test_result'] == 'FAIL':
+               raise FailureException()
+            else:
+                pass
+        else:
+            raise FailureException()
+

@@ -282,7 +282,7 @@ class SimpleTrafficTest(object):
             #self.end_session()
         except Exception as e: 
             print(e)
-            self.testpass = 'FAIL'
+            result_dict = {}
 
         finally:
             self.end_session()

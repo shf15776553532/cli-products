@@ -67,6 +67,36 @@ parameters:
     short_option: N
     long_option: ns_uuid
     is_optional: false 
+  - name: stcv1_vnfname
+    description: The vnf name of stcv1 instrument from SDC
+    type: string
+    long_option: stcv1_vnfname
+    is_optional: false 
+  - name: stcv2_vnfname
+    description: The vnf name of stcv2 instrument from SDC
+    type: string
+    long_option: stcv2_vnfname
+    is_optional: false 
+  - name: sut_vnfname
+    description: The vnf name of sut from SDC
+    type: string
+    long_option: sut_vnfname
+    is_optional: false 
+  - name: mgmt_netname
+    description: The network name of MGMT network in topology
+    type: string
+    long_option: mgmt_netname
+    is_optional: false 
+  - name: west_netname
+    description: The network name of west network in topology which is between stcv1 and sut
+    type: string
+    long_option: west_netname
+    is_optional: false 
+  - name: east_netname
+    description: The network name of east network in topology which is between stcv2 and sut
+    type: string
+    long_option: east_netname
+    is_optional: false 
   - name: result-json
     description: path of result-json file
     type: string
@@ -116,7 +146,7 @@ results:
 
 cmd:
   command:
-    -  python3 $s{env:OPEN_CLI_HOME}/script/func-test-demo.py --conf ${config-json} --profile ${profile} --request-id ${request-id} --stcv1_uuid ${stcv1_uuid} --stcv2_uuid ${stcv2_uuid} --sut_uuid ${sut_uuid} --ns_uuid ${ns_uuid} --result-json $s{tmp:result.json}
+    -  python3 $s{env:OPEN_CLI_HOME}/script/func-test-demo.py --conf ${config-json} --profile ${profile} --request-id ${request-id} --stcv1_uuid ${stcv1_uuid} --stcv2_uuid ${stcv2_uuid} --sut_uuid ${sut_uuid} --ns_uuid ${ns_uuid} --stcv1_vnfname ${stcv1_vnfname} --stcv2_vnfname ${stcv2_vnfname} --sut_vnfname ${sut_vnfname} --mgmt_netname ${mgmt_netname} --west_netname ${west_netname} --east_netname ${east_netname} --result-json $s{tmp:result.json}
   success_codes:
     - 0
   working_directory: .

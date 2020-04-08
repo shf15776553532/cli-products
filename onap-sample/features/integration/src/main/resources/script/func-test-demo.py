@@ -494,14 +494,8 @@ class ONAP:
 
 ########## Codes below this line moved from stc_demo_ns and onap_api #############
 class onap_api:
-    stc_west_instance_name = 'Demo-test-stvc01 0'  #"stcv_west"
-    stc_east_instance_name = 'Demo-test-stvc02 0'  #"stcv_east"
-    openwrt_instance_name = 'Demo-test-openwrt 0'  #"dut"
-    mgmt_net_name = "external"
-    west_test_net_name = "west_net"
-    east_test_net_name = "east_net"
 
-    def __init__(self, conf, ns_instance_id, jobid, tenant_id):
+    def __init__(self, conf, ns_instance_id, jobid, tenant_id, topo_info):
         self.conf = conf
         vnfmdriver = self.conf['vnf']['vnfm_driver'] 
         self.base_url = self.conf['vnfm'][vnfmdriver]['url']
@@ -516,6 +510,12 @@ class onap_api:
             'X-FromAppId': "jimmy-postman",
             "Authorization": "Basic QUFJOkFBSQ=="
         }
+        self.stc_west_instance_name = topo_info['stcv1_name']
+        self.stc_east_instance_name = topo_info['stcv2_name']
+        self.openwrt_instance_name = topo_info['sut_name']
+        self.mgmt_net_name = topo_info['mgmt_network']
+        self.west_test_net_name = topo_info['west_network']
+        self.east_test_net_name = topo_info['east_network']
 
     def waitProcessFinished(self, ns_instance_id, job_id, action):
         job_url = self.base_url + "/api/nslcm/v1/jobs/%s" % job_id
@@ -677,8 +677,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="ONAP TOSCA VNF validation using ONAP CLI and Open Command Platform (OCOMP)", formatter_class=RawTextHelpFormatter)
     #parser.add_argument('--product', action='store', dest='product', help='OCOMP product to use, default to onap-dublin',
     #                    default=os.environ.get('OPEN_CLI_PRODUCT_IN_USE'))
-    parser.add_argument('--profile', action='store', dest='profile', help='OCOMP profile to use, default to onap-dublin',
-                        default = 'onap-dublin' )
+    parser.add_argument('--profile', action='store', dest='profile', help='OCOMP profile to use, default to onap-dublin', default = 'onap-dublin' )
     parser.add_argument('--request-id', action='store', dest='request_id', help='Request Id to track the progress of running this script')
     
 
@@ -688,10 +687,17 @@ if __name__ == '__main__':
     #parser.add_argument('--vendor-name', action='store', dest='vendor_name', help='VNF Vendor name')
     parser.add_argument('--conf', action='store', dest='config_file_path', help='Configuration file path')
     #
-    parser.add_argument('--stcv1_uuid', action='store', dest='stcv1_uuid', help='The uuid value of stcv instrument from SDC')
-    parser.add_argument('--stcv2_uuid', action='store', dest='stcv2_uuid', help='The uuid value of stcv instrument from SDC')
-    parser.add_argument('--sut_uuid', action='store', dest='sut_uuid', help='The uuid value of one openwrt from SDC')
+    parser.add_argument('--stcv1_uuid', action='store', dest='stcv1_uuid', help='The uuid value of stcv1 instrument from SDC')
+    parser.add_argument('--stcv2_uuid', action='store', dest='stcv2_uuid', help='The uuid value of stcv2 instrument from SDC')
+    parser.add_argument('--sut_uuid', action='store', dest='sut_uuid', help='The uuid value of openwrt from SDC')
     parser.add_argument('--ns_uuid', action='store', dest='ns_uuid', help='The uuid value of Network Service from SDC')
+    #
+    parser.add_argument('--stcv1_vnfname', action='store', dest='stcv1_vnfname', help='The vnf name of stcv1 instrument from topology designed in SDC')
+    parser.add_argument('--stcv2_vnfname', action='store', dest='stcv2_vnfname', help='The vnf name of stcv2 instrument from topology designed in SDC')
+    parser.add_argument('--sut_vnfname', action='store', dest='sut_vnfname', help='The vnf name of sut from topology designed in SDC')
+    parser.add_argument('--mgmt_netname', action='store', dest='mgmt_netname', help='The network name of MGMT network in topology')
+    parser.add_argument('--west_netname', action='store', dest='west_netname', help='The network name of west network in topology, which is between stcv1 and sut')
+    parser.add_argument('--east_netname', action='store', dest='east_netname', help='The network name of east network in topology, which is between stcv2 and sut')
     #
     parser.add_argument('--result-json', action='store', dest='result', help='Result json file.')
 
@@ -701,6 +707,13 @@ if __name__ == '__main__':
 
     product = 'onap-dublin'
     profile = args.profile
+
+    topology_info= {'stcv1_name': args.stcv1_vnfname,
+                    'stcv2_name': args.stcv2_vnfname,
+                    'sut_name': args.sut_vnfname,
+                    'mgmt_network': args.mgmt_netname,
+                    'west_network': args.west_netname,
+                    'east_network': args.east_netname}
 
     conf = {}
     config_file = args.config_file_path
@@ -730,7 +743,7 @@ if __name__ == '__main__':
     try:
         onap.setup_cloud_and_subscription()
         job_id = onap.create_vnf() # onboard vnf,onboard ns,create ns, instantiate ns
-        ns = onap_api(conf, onap.ns_instance_id, job_id,onap.tenant_id)
+        ns = onap_api(conf, onap.ns_instance_id, job_id,onap.tenant_id, topology_info)
         ns.get_vnfs_info()
         testresult = onap.traffic_test(labserver=conf['instrument']['instrument_mgs']['mnt_address'], 
                                         username = conf['instrument']['instrument_mgs']['username'],

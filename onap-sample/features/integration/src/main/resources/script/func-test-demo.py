@@ -370,7 +370,8 @@ class ONAP:
                                         'location': self.cloud_id+'_'+self.conf['cloud']['region'],
                                         'sdn-controller-id': self.esr_vnfm_id})
         jobid = output['job-id']
-        return jobid
+        self.waitProcessFinished(jobid)
+
 
     def traffic_test(self, labserver, username, stcv1_mgmtip, stcv1_testip, stcv2_mgmtip, stcv2_testip, dut_leftip, dut_rightip):
         logger.debug('---------- execute traffic test script ----------')
@@ -391,12 +392,38 @@ class ONAP:
         return output
 
 
+    def waitProcessFinished(self, job_id):
+        vnfmdriver = self.conf['vnf']['vnfm_driver']
+        base_url = self.conf['vnfm'][vnfmdriver]['url']
+        job_url = base_url + "/api/nslcm/v1/jobs/%s" % job_id
+        progress = 0
+        for i in range(500):
+            job_resp = requests.get(url=job_url)
+            if 200 == job_resp.status_code:
+                if "responseDescriptor" in job_resp.json():
+                    progress_rep = (job_resp.json())["responseDescriptor"]["progress"]
+                    if 100 != progress_rep:
+                        if 255 == progress_rep:
+                            logger.error("The operation failed.")
+                            break
+                        elif progress_rep != progress:
+                            progress = progress_rep
+                            logger.info('The operation process is %s.' % progress)
+                        time.sleep(0.2)
+                    else:
+                        logger.info('The operation process is %s.' % progress_rep)
+                        logger.info("The operation successfully finished.")
+                        time.sleep(10)  
+                        break
 
     def cleanup(self):
         if self.ns_instance_id:
             logger.debug('----------vfc-nslcm-terminate----------')
-            self.ocomp.run(command='vfc-nslcm-terminate',
+            output = self.ocomp.run(command='vfc-nslcm-terminate',
                             params={'ns-instance-id': self.ns_instance_id})
+            jobid = output['job-id']
+            self.waitProcessFinished(jobid)
+
             logger.debug('----------vfc-nslcm-delete----------')
             self.ocomp.run(command='vfc-nslcm-delete',
                             params={'ns-instance-id': self.ns_instance_id})
@@ -495,12 +522,11 @@ class ONAP:
 ########## Codes below this line moved from stc_demo_ns and onap_api #############
 class onap_api:
 
-    def __init__(self, conf, ns_instance_id, jobid, tenant_id, topo_info):
+    def __init__(self, conf, ns_instance_id, tenant_id, topo_info):
         self.conf = conf
         vnfmdriver = self.conf['vnf']['vnfm_driver'] 
         self.base_url = self.conf['vnfm'][vnfmdriver]['url']
         self.ns_instance_id = ns_instance_id
-        self.jobid = jobid
         self.tenant_id = tenant_id        
         self.aai_header = {
             "Accept": "application/json",
@@ -516,29 +542,6 @@ class onap_api:
         self.mgmt_net_name = topo_info['mgmt_network']
         self.west_test_net_name = topo_info['west_network']
         self.east_test_net_name = topo_info['east_network']
-
-    def waitProcessFinished(self, ns_instance_id, job_id, action):
-        job_url = self.base_url + "/api/nslcm/v1/jobs/%s" % job_id
-        progress = 0
-        for i in range(500):
-            job_resp = requests.get(url=job_url)
-            if 200 == job_resp.status_code:
-                if "responseDescriptor" in job_resp.json():
-                    progress_rep = (job_resp.json())["responseDescriptor"]["progress"]
-                    if 100 != progress_rep:
-                        if 255 == progress_rep:
-                            logger.error("Ns %s %s failed." % (ns_instance_id, action))
-                            break
-                        elif progress_rep != progress:
-                            progress = progress_rep
-                            logger.info("Ns %s %s process is %s." % (ns_instance_id, action, progress))
-                        time.sleep(0.2)
-                    else:
-                        logger.info("Ns %s %s process is %s." % (ns_instance_id, action, progress_rep))
-                        logger.info("Ns %s %s successfully." % (ns_instance_id, action))
-                        time.sleep(10)  
-                        break
-
 
     def set_openstack_client(self):
         params = {
@@ -643,8 +646,6 @@ class onap_api:
 
     def get_vnfs_info(self):
         logger.debug('----------get_vnf_info_start----------')
-        self.waitProcessFinished(self.ns_instance_id, self.jobid, "instantiate")
-        #time.sleep(15)
         self.set_openstack_client()
         stc_west = self.get_stc_west_instance_info()
         self._stcv_west_ip = stc_west["mgmt_ip"]
@@ -742,8 +743,8 @@ if __name__ == '__main__':
 
     try:
         onap.setup_cloud_and_subscription()
-        job_id = onap.create_vnf() # onboard vnf,onboard ns,create ns, instantiate ns
-        ns = onap_api(conf, onap.ns_instance_id, job_id,onap.tenant_id, topology_info)
+        onap.create_vnf() # onboard vnf,onboard ns,create ns, instantiate ns
+        ns = onap_api(conf, onap.ns_instance_id, onap.tenant_id, topology_info)
         ns.get_vnfs_info()
         testresult = onap.traffic_test(labserver=conf['instrument']['instrument_mgs']['mnt_address'], 
                                         username = conf['instrument']['instrument_mgs']['username'],
@@ -776,4 +777,5 @@ if __name__ == '__main__':
                 pass
         else:
             raise FailureException()
+
 
